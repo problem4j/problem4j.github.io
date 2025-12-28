@@ -1,0 +1,9 @@
+hello:
+  label: Hello
+  permalink: /hello
+  description: Introduction of project and/or project friends
+
+release:
+  label: Release
+  permalink: /release
+  description: Project releases
