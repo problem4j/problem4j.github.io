@@ -21,7 +21,7 @@ function HomepageHeader() {
           <Link
             className="button button--secondary button--lg"
             to="/docs/intro">
-            🔎 Browse Problem4J Documentation 🔎
+            📓 See Documentation 📓
           </Link>
         </div>
       </div>
