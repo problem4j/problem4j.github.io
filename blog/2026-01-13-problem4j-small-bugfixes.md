@@ -7,7 +7,7 @@ tags: [release]
 
 Hi everyone 👋
 
-A minor patches were released. See releases on GitHub repositories for release notes.
+A minor patches were released. See releases on GitHub repositories for release notes (...)
 
 <!-- truncate -->
 

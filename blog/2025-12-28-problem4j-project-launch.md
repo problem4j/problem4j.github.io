@@ -15,7 +15,7 @@ imperative approach, based on extending a common exception type (`ProblemExcepti
 annotation-based approach (via `@ProblemMapping`). As a primary set of modules, `problem4j-core`, `problem4j-jackson`,
 and `problem4j-spring` were introduced, providing a core (framework-agnostic) module, Jackson integration (both v2 -
 `com.fasterxml.jackson` and v3 - `tools.jackson`), as well as Spring Boot integration (supporting both leading versions
-\- v3 and v4). Other integrations may (or may not) eventually arrive.
+\- v3 and v4). Other integrations may (or may not) eventually arrive  (...)
 
 <!-- truncate -->
 
