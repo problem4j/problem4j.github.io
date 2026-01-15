@@ -6,7 +6,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Problem4J',
-  tagline: 'Introducing Problem model from RFC7807 (aka RFC9457) to Java.',
+  tagline: 'A modest effort to make RFC 7807 Problem Details (aka RFC 9457) easy to use in Java applications and commonly used web frameworks.',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -162,7 +162,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Problem4J Team & Contributors. Built with Docusaurus.`,
+      copyright: `Copyright © 2025-${new Date().getFullYear()} Problem4J Team & Contributors. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
