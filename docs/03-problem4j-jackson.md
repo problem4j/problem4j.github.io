@@ -72,12 +72,12 @@ not** declare `jackson-databind` as a transitive dependency.
        <dependency>
            <groupId>io.github.problem4j</groupId>
            <artifactId>problem4j-core</artifactId>
-           <version>1.3.1</version>
+           <version>1.3.2</version>
        </dependency>
        <dependency>
            <groupId>io.github.problem4j</groupId>
            <artifactId>problem4j-jackson2</artifactId>
-           <version>1.3.1</version>
+           <version>1.3.2</version>
        </dependency>
    </dependencies>
    ```
@@ -85,8 +85,8 @@ not** declare `jackson-databind` as a transitive dependency.
    ```kt
    dependencies {
        implementation("com.fasterxml.jackson.core:jackson-databind:2.20.0")
-       implementation("io.github.problem4j:problem4j-core:1.3.1")
-       implementation("io.github.problem4j:problem4j-jackson2:1.3.1")
+       implementation("io.github.problem4j:problem4j-core:1.3.2")
+       implementation("io.github.problem4j:problem4j-jackson2:1.3.2")
    }
    ```
 
@@ -155,12 +155,12 @@ not** declare `jackson-databind` as a transitive dependency.
        <dependency>
            <groupId>io.github.problem4j</groupId>
            <artifactId>problem4j-core</artifactId>
-           <version>1.3.1</version>
+           <version>1.3.2</version>
        </dependency>
        <dependency>
            <groupId>io.github.problem4j</groupId>
            <artifactId>problem4j-jackson3</artifactId>
-           <version>1.3.1</version>
+           <version>1.3.2</version>
        </dependency>
    </dependencies>
    ```
@@ -168,8 +168,8 @@ not** declare `jackson-databind` as a transitive dependency.
    ```kt
    dependencies {
        implementation("tools.jackson.core:jackson-databind:3.0.3")
-       implementation("io.github.problem4j:problem4j-core:1.3.1")
-       implementation("io.github.problem4j:problem4j-jackson3:1.3.1")
+       implementation("io.github.problem4j:problem4j-core:1.3.2")
+       implementation("io.github.problem4j:problem4j-jackson3:1.3.2")
    }
    ```
 
