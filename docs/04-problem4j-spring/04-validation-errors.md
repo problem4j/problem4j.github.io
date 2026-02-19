@@ -147,6 +147,6 @@ Spring automatically assumes it to be a `@ModelAttribute`.
 constructors are present, Problem4J will skip evaluation of `@BindParam`. If it is a `record`, then actual arguments
 will be taken from **record's canonical constructor**, and additional constructors are ignored.
 
-[MethodValidationProblemResolver]: https://github.com/problem4j/problem4j-spring/blob/v2.1.3/problem4j-spring-web/src/main/java/io/github/problem4j/spring/web/resolver/MethodValidationProblemResolver.java
+[MethodValidationProblemResolver]: https://github.com/problem4j/problem4j-spring/blob/v2.2.0/problem4j-spring-web/src/main/java/io/github/problem4j/spring/web/resolver/MethodValidationProblemResolver.java
 
 [method-validation-exceptions]: https://docs.spring.io/spring-framework/reference/core/validation/beanvalidation.html#validation-beanvalidation-spring-method-exceptions

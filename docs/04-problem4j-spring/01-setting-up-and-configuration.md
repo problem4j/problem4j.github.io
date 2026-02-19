@@ -16,8 +16,8 @@ on versions between `3.2.x` and `3.5.x`. Integration with **Spring Boot 4** is r
 
 | Spring Boot Version | Problem4J Spring Version |
 |---------------------|--------------------------|
-| `3.x`               | `1.x` (latest - `1.2.3`) |
-| `4.x`               | `2.x` (latest - `2.1.3`) |
+| `3.x`               | `1.x` (latest - `1.2.5`) |
+| `4.x`               | `2.x` (latest - `2.2.0`) |
 
 Use version from the above table while managing your dependency or visit Maven Central to find out latest version in
 given generation.
