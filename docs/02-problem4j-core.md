@@ -72,6 +72,17 @@ try {
 }
 ```
 
+For convenience, `Problem` objects can also be created using static `Problem.of` factory methods.
+
+```java
+static Problem Problem.of(int status);
+static Problem Problem.of(int status, @Nullable String detail);
+static Problem Problem.of(String title, int status);
+static Problem Problem.of(String title, int status, @Nullable String detail);
+static Problem Problem.of(URI type, String title, int status);
+static Problem Problem.of(URI type, String title, int status, @Nullable String detail);
+```
+
 ## Throw exception annotated with `@ProblemMapping`
 
 If an exception is annotated with `@ProblemMapping`, extracting the underlying `Problem` from it requires a bit of

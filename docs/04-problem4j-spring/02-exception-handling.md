@@ -222,6 +222,17 @@ Will result in following response body:
 }
 ```
 
+For convenience, `Problem` objects can also be created using static `Problem.of` factory methods.
+
+```java
+static Problem Problem.of(int status);
+static Problem Problem.of(int status, @Nullable String detail);
+static Problem Problem.of(String title, int status);
+static Problem Problem.of(String title, int status, @Nullable String detail);
+static Problem Problem.of(URI type, String title, int status);
+static Problem Problem.of(URI type, String title, int status, @Nullable String detail);
+```
+
 ## Spring's build-in `@ResponseStatus` annotation
 
 If your exception is annotated with Spring's built-in `@ResponseStatus`, the library will use the specified HTTP status
