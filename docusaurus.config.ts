@@ -162,7 +162,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © 2025-${new Date().getFullYear()} Problem4J Team & Contributors. Built with Docusaurus.`,
+      copyright: `Copyright © 2025-${new Date().getFullYear()} The Problem4J Authors. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
