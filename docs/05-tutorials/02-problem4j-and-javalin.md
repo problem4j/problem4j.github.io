@@ -2,17 +2,37 @@
 sidebar_position: 2
 ---
 
-# Using it from scratch
+# Problem4J & Javalin
 
-An example of setting up with an actual HTTP server.
+The example integration of Problem4J with Javalin.
 
-The primary integration provided by this library orbits around Spring Boot. However, the Problem4J libraries are fully
-featured to work in any environment.
+Even though Problem4J is primarily focused on Spring Boot, it can be easily integrated with any Java application, as
+long as you can catch exceptions and convert them to `Problem` instances. This page demonstrates how to do this with
+[Javalin][javalin], a lightweight web framework for Java and Kotlin.
 
-## Integration example for Javalin
+## Getting Started
 
-This chapter is a quick introduction to using Problem4J in a non-Spring Java application, using [Javalin][javalin]
-library for HTTP server functionality.
+```xml
+<dependencies>
+    <dependency>
+        <groupId>io.github.problem4j</groupId>
+        <artifactId>problem4j-core</artifactId>
+        <version>1.4.1</version>
+    </dependency>
+    <dependency>
+        <groupId>io.github.problem4j</groupId>
+        <artifactId>problem4j-jackson3</artifactId>
+        <version>1.4.1</version>
+    </dependency>
+</dependencies>
+```
+
+```kt
+dependencies {
+    implementation("io.github.problem4j:problem4j-core:1.4.1")
+    implementation("io.github.problem4j:problem4j-jackson3:1.4.1")
+}
+```
 
 Note that this example also assumes, for JSON serialization, that you use Jackson (`JsonMapper`) in either v2 or v3 and
 the compatible [Problem4J Jackson](../problem4j-jackson) module.

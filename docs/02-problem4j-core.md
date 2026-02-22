@@ -1,12 +1,8 @@
 ---
-sidebar_position: 1
+sidebar_position: 2
 ---
 
-# Setting Up & Configuration
-
-Setting up dependencies for using Problem4J Core library.
-
-## Dependency
+# Problem4J Core
 
 Add library as dependency to Maven or Gradle. See the actual versions on [Maven Central][maven-central]. **Java 8** or
 higher is required to use this library.
