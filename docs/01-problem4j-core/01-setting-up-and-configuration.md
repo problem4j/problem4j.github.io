@@ -1,17 +1,10 @@
 ---
-sidebar_position: 2
+sidebar_position: 1
 ---
 
-# Problem4J Core
+# Setting Up & Configuration
 
-Problem4J Core provides a framework-agnostic set of features to be used in implementing framework-specific features by
-other modules. There are two primary ways of throwing exception with `Problem`.
-
-1. Throw a `ProblemException`.
-2. Throw exception annotated with `@ProblemMapping`.
-
-Following chapters touch also other aspects, such as `ProblemContext` and how to approach altering `Problem` objects,
-if they are immutable.
+Setting up dependencies for using Problem4J Core library.
 
 ## Dependency
 
@@ -35,7 +28,18 @@ higher is required to use this library.
    }
     ```
 
-## Throw a `ProblemException`
+## Usage
+
+Problem4J Core provides a framework-agnostic set of features to be used in implementing framework-specific features by
+other modules. There are two primary ways of throwing exception with `Problem`.
+
+1. Throw a `ProblemException`.
+2. Throw exception annotated with `@ProblemMapping`.
+
+Following chapters touch also other aspects, such as `ProblemContext` and how to approach altering `Problem` objects,
+if they are immutable.
+
+### Throw a `ProblemException`
 
 The most basic method is to throw a `ProblemException` or its subclass.
 
@@ -83,7 +87,7 @@ static Problem Problem.of(URI type, String title, int status);
 static Problem Problem.of(URI type, String title, int status, @Nullable String detail);
 ```
 
-## Throw exception annotated with `@ProblemMapping`
+### Throw exception annotated with `@ProblemMapping`
 
 If an exception is annotated with `@ProblemMapping`, extracting the underlying `Problem` from it requires a bit of
 setup first. Fields such as `type`, `title`, `detail` and `instance` allow to interpolate fields from exception object
@@ -137,7 +141,7 @@ try {
 }
 ```
 
-## Including `ProblemContext` in `@ProblemMapping`-annotated exception
+### Including `ProblemContext` in `@ProblemMapping`-annotated exception
 
 `ProblemMapper` allows passing `ProblemContext` instance as an additional argument to `toProblemBuilder` method. Such
 context allows to pass additional data for `@ProblemMapping` fields interpolation.
@@ -184,7 +188,7 @@ try {
 }
 ```
 
-## Modifying `Problem` objects
+### Modifying `Problem` objects
 
 `Problem` objects are immutable. In order to change any of its values, you are required to create a new `Problem`
 object. For that purpose, consider using `toBuilder()` method.

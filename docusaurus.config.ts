@@ -88,7 +88,7 @@ const config: Config = {
         //   label: 'Docs',
         // },
         {to: '/docs/intro', label: 'Intro', position: 'left'},
-        {to: '/docs/problem4j-core', label: 'Problem4J Core', position: 'left'},
+        {to: '/docs/category/problem4j-core', label: 'Problem4J Core', position: 'left'},
         {to: '/docs/problem4j-jackson', label: 'Problem4J Jackson', position: 'left'},
         {to: '/docs/category/problem4j-spring', label: 'Problem4J Spring', position: 'left'},
         {to: '/blog', label: 'Blog', position: 'left'},
@@ -111,7 +111,7 @@ const config: Config = {
             },
             {
               label: 'Problem4J Core',
-              to: '/docs/problem4j-core',
+              to: '/docs/category/problem4j-core',
             },
             {
               label: 'Problem4J Jackson',
