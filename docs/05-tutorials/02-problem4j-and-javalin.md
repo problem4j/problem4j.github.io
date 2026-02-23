@@ -38,7 +38,7 @@ Note that this example also assumes, for JSON serialization, that you use Jackso
 the compatible [Problem4J Jackson](../problem4j-jackson) module.
 
 ```java
-JsonMapper jsonMapper = new JsonMapper.Builder().findAndAddModules().build();
+JsonMapper jsonMapper = JsonMapper.builder().findAndAddModules().build();
 ProblemMapper problemMapper = ProblemMapper.create();
 
 Javalin app = Javalin.create();
