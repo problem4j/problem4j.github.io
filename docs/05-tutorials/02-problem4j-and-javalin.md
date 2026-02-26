@@ -17,20 +17,20 @@ long as you can catch exceptions and convert them to `Problem` instances. This p
     <dependency>
         <groupId>io.github.problem4j</groupId>
         <artifactId>problem4j-core</artifactId>
-        <version>1.4.1</version>
+        <version>1.4.2</version>
     </dependency>
     <dependency>
         <groupId>io.github.problem4j</groupId>
         <artifactId>problem4j-jackson3</artifactId>
-        <version>1.4.1</version>
+        <version>1.4.2</version>
     </dependency>
 </dependencies>
 ```
 
 ```kt
 dependencies {
-    implementation("io.github.problem4j:problem4j-core:1.4.1")
-    implementation("io.github.problem4j:problem4j-jackson3:1.4.1")
+    implementation("io.github.problem4j:problem4j-core:1.4.2")
+    implementation("io.github.problem4j:problem4j-jackson3:1.4.2")
 }
 ```
 
