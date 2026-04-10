@@ -17,7 +17,7 @@ and `problem4j-spring` were introduced, providing a core (framework-agnostic) mo
 `com.fasterxml.jackson` and v3 - `tools.jackson`), as well as Spring Boot integration (supporting both leading versions
 \- v3 and v4). Other integrations may (or may not) eventually arrive  (...)
 
-<!-- truncate -->
+{/* truncate */}
 
 **Why should I care?**  
 
