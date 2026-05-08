@@ -67,26 +67,26 @@ not** declare `jackson-databind` as a transitive dependency.
        <dependency>
            <groupId>com.fasterxml.jackson.core</groupId>
            <artifactId>jackson-databind</artifactId>
-           <version>2.20.1</version>
+           <version>2.21.3</version>
        </dependency>
        <dependency>
            <groupId>io.github.problem4j</groupId>
            <artifactId>problem4j-core</artifactId>
-           <version>1.4.3</version>
+           <version>2.0.0</version>
        </dependency>
        <dependency>
            <groupId>io.github.problem4j</groupId>
            <artifactId>problem4j-jackson2</artifactId>
-           <version>1.4.3</version>
+           <version>2.0.0</version>
        </dependency>
    </dependencies>
    ```
 2. Gradle (Kotlin DSL):
    ```kt
    dependencies {
-       implementation("com.fasterxml.jackson.core:jackson-databind:2.20.0")
-       implementation("io.github.problem4j:problem4j-core:1.4.3")
-       implementation("io.github.problem4j:problem4j-jackson2:1.4.3")
+       implementation("com.fasterxml.jackson.core:jackson-databind:2.21.3")
+       implementation("io.github.problem4j:problem4j-core:2.0.0")
+       implementation("io.github.problem4j:problem4j-jackson2:2.0.0")
    }
    ```
 
@@ -150,26 +150,26 @@ not** declare `jackson-databind` as a transitive dependency.
        <dependency>
            <groupId>tools.jackson.core</groupId>
            <artifactId>jackson-databind</artifactId>
-           <version>3.0.3</version>
+           <version>3.1.2</version>
        </dependency>
        <dependency>
            <groupId>io.github.problem4j</groupId>
            <artifactId>problem4j-core</artifactId>
-           <version>1.4.3</version>
+           <version>2.0.0</version>
        </dependency>
        <dependency>
            <groupId>io.github.problem4j</groupId>
            <artifactId>problem4j-jackson3</artifactId>
-           <version>1.4.3</version>
+           <version>2.0.0</version>
        </dependency>
    </dependencies>
    ```
 2. Gradle (Kotlin DSL):
    ```kt
    dependencies {
-       implementation("tools.jackson.core:jackson-databind:3.0.3")
-       implementation("io.github.problem4j:problem4j-core:1.4.3")
-       implementation("io.github.problem4j:problem4j-jackson3:1.4.3")
+       implementation("tools.jackson.core:jackson-databind:3.1.2")
+       implementation("io.github.problem4j:problem4j-core:2.0.0")
+       implementation("io.github.problem4j:problem4j-jackson3:2.0.0")
    }
    ```
 

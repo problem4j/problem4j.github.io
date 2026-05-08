@@ -13,14 +13,14 @@ higher is required to use this library.
        <dependency>
            <groupId>io.github.problem4j</groupId>
            <artifactId>problem4j-core</artifactId>
-           <version>1.4.3</version>
+           <version>2.0.0</version>
        </dependency>
    </dependencies>
    ```
 2. Gradle (Groovy or Kotlin DSL):
    ```kt
    dependencies {
-       implementation("io.github.problem4j:problem4j-core:1.4.3")
+       implementation("io.github.problem4j:problem4j-core:2.0.0")
    }
     ```
 
@@ -116,8 +116,8 @@ throw new InterpolatedException("sub", "boom");
 ```
 
 After catching such exception, to be able to convert it to `Problem` object, you must have an instance of
-`ProblemMapper`. Problem4J Core provides a default implementation available from `ProblemMapper.create()` method, but
-you may use `AbstractProblemMapper` as a base to customize it further.
+`ProblemMapper`. Problem4J Core provides a default implementation - `DefaultProblemMapper`, but you may
+extend from it to customize it further.
 
 Note that `ProblemMapper` returns a `ProblemBuilder` instance.
 
@@ -127,7 +127,7 @@ import io.github.problem4j.core.ProblemMapper;
 
 // ...
 
-ProblemMapper problemMapper = ProblemMapper.create();
+ProblemMapper problemMapper = new DefaultProblemMapper();
 try {
   // ...
 } catch (InterpolatedException e) {
@@ -173,7 +173,7 @@ import io.github.problem4j.core.ProblemMapper;
 // ...
 
 String traceId = someTracingFramework.getTraceId();
-ProblemMapper problemMapper = ProblemMapper.create();
+ProblemMapper problemMapper = new DefaultProblemMapper();
 try {
   // ...
 } catch (TracingAwareException e) {

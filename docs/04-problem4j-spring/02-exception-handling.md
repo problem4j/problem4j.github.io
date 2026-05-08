@@ -115,7 +115,7 @@ public class ExampleExceptionResolver implements ProblemResolver {
   }
 
   @Override
-  public ProblemBuilder resolveBuilder(
+  public Problem resolve(
       ProblemContext context, Exception ex, HttpHeaders headers, HttpStatusCode status) {
     ExampleException e = (ExampleException) ex;
     return Problem.builder()
@@ -125,7 +125,8 @@ public class ExampleExceptionResolver implements ProblemResolver {
         .detail("bad input for user " + e.getUserId())
         .instance("https://example.org/instances/" + context.getTraceId())
         .extension("userId", e.getUserId())
-        .extension("fieldName", e.getFieldName());
+        .extension("fieldName", e.getFieldName())
+        .build();
   }
 }
 ```
@@ -146,9 +147,6 @@ Will result in following response body:
 
 You can also override existing `ProblemResolver` implementations to extend models provided by this module. Build-in
 resolvers come with `@ConditionalOnMissingBean`, so they can be shadowed by custom ones in target applications.
-
-`ProblemResolver` implementations return a `ProblemBuilder` for flexibility in constructing the final `Problem` object.
-It's a convenience method for further extending `Problem` object by processing downstream.
 
 ## Custom `@RestControllerAdvice`
 

@@ -17,20 +17,20 @@ long as you can catch exceptions and convert them to `Problem` instances. This p
     <dependency>
         <groupId>io.github.problem4j</groupId>
         <artifactId>problem4j-core</artifactId>
-        <version>1.4.3</version>
+        <version>2.0.0</version>
     </dependency>
     <dependency>
         <groupId>io.github.problem4j</groupId>
         <artifactId>problem4j-jackson3</artifactId>
-        <version>1.4.3</version>
+        <version>2.0.0</version>
     </dependency>
 </dependencies>
 ```
 
 ```kt
 dependencies {
-    implementation("io.github.problem4j:problem4j-core:1.4.3")
-    implementation("io.github.problem4j:problem4j-jackson3:1.4.3")
+    implementation("io.github.problem4j:problem4j-core:2.0.0")
+    implementation("io.github.problem4j:problem4j-jackson3:2.0.0")
 }
 ```
 
@@ -39,7 +39,7 @@ the compatible [Problem4J Jackson](../problem4j-jackson) module.
 
 ```java
 JsonMapper jsonMapper = JsonMapper.builder().findAndAddModules().build();
-ProblemMapper problemMapper = ProblemMapper.create();
+ProblemMapper problemMapper = new DefaultProblemMapper();
 
 Javalin app = Javalin.create();
 

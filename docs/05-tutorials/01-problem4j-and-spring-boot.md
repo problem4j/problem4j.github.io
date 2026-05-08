@@ -13,14 +13,14 @@ The premier integration of Problem4J with Spring Boot.
     <dependency>
         <groupId>io.github.problem4j</groupId>
         <artifactId>problem4j-spring-webmvc</artifactId>
-        <version>2.2.4</version>
+        <version>3.0.0</version>
     </dependency>
 </dependencies>
 ```
 
 ```kt
 dependencies {
-    implementation("io.github.problem4j:problem4j-spring-webmvc:2.2.4")
+    implementation("io.github.problem4j:problem4j-spring-webmvc:3.0.0")
 }
 ```
 
