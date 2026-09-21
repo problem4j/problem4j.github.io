@@ -148,6 +148,9 @@ Will result in following response body:
 You can also override existing `ProblemResolver` implementations to extend models provided by this module. Build-in
 resolvers come with `@ConditionalOnMissingBean`, so they can be shadowed by custom ones in target applications.
 
+For Kotlin projects, a resolver can also be declared from a lambda with `problemResolver<E> { }`. See
+[Kotlin Support](./kotlin-support#functional-problemresolver) chapter for more info.
+
 ## Custom `@RestControllerAdvice`
 
 While creating your own `@RestControllerAdvice`, make sure to position it with right `@Order`. In order for your custom
