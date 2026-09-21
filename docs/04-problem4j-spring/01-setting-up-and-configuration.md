@@ -90,6 +90,15 @@ such as request trace identifiers or constructing predictable instance URIs. Def
 
 See [Problem Post-Processor](./problem-post-processor) chapter for more info.
 
+### `problem4j.duplicate-resolver-policy`
+
+Decides what happens when several `ProblemResolver` beans handle the same exception class with equal precedence
+(`fail` - **default**, `first`). With `fail`, application startup fails with an `IllegalStateException` naming the
+conflicting beans. With `first`, the first one registered in the application context is used.
+
+See [Implementing `ProblemResolver`](./exception-handling#implementing-problemresolver) chapter for more info on
+resolver precedence.
+
 ### `problem4j.resolver-caching.enabled`
 
 Enables caching of resolved `ProblemResolver` instances to avoid repeated reflection and lookup. Defaults to `false`

@@ -148,6 +148,27 @@ Will result in following response body:
 You can also override existing `ProblemResolver` implementations to extend models provided by this module. Build-in
 resolvers come with `@ConditionalOnMissingBean`, so they can be shadowed by custom ones in target applications.
 
+When several resolvers declare the same exception class, the one with the highest precedence wins, as determined by
+`@Order` or the `Ordered` interface (lower value wins). Built-in resolvers use the default precedence
+(`Ordered.LOWEST_PRECEDENCE`), so a custom resolver annotated with `@Order` takes over without having to replace the
+bean.
+
+```java
+@Order(0)
+@Component
+public class ExampleExceptionResolver implements ProblemResolver {
+  // ...
+}
+```
+
+Candidates with equal precedence are a configuration error - startup fails with an `IllegalStateException` naming the
+conflicting beans. Set
+[`problem4j.duplicate-resolver-policy=first`](./setting-up-and-configuration#problem4jduplicate-resolver-policy) to pick
+the first one registered instead.
+
+For Kotlin projects, a resolver can also be declared from a lambda with `problemResolver<E> { }`. See
+[Kotlin Support](./kotlin-support#functional-problemresolver) chapter for more info.
+
 ## Custom `@RestControllerAdvice`
 
 While creating your own `@RestControllerAdvice`, make sure to position it with right `@Order`. In order for your custom

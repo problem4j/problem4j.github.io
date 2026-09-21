@@ -12,6 +12,9 @@ your framework) either `AdviceWebFluxInspector` or `AdviceWebMvcInspector`.
 The primary goal of these inspectors is to let developers customize logging in their preferred style, but you can also
 use them for other purposes such as metrics collection, auditing, or debugging.
 
+In Kotlin, an inspector can be declared from a lambda instead of a class - see
+[Kotlin Support](./kotlin-support#functional-advice-inspectors) chapter.
+
 ```java
 @Component
 public class LoggingInspector implements AdviceWebMvcInspector {

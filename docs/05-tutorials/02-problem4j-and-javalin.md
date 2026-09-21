@@ -35,7 +35,7 @@ dependencies {
 ```
 
 Note that this example also assumes, for JSON serialization, that you use Jackson (`JsonMapper`) in either v2 or v3 and
-the compatible [Problem4J Jackson](../problem4j-jackson) module.
+the compatible [Problem4J Jackson](../problem4j-jackson/jackson) module.
 
 ```java
 JsonMapper jsonMapper = JsonMapper.builder().findAndAddModules().build();
