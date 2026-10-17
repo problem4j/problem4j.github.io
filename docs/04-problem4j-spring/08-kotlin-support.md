@@ -22,8 +22,8 @@ projects already have it on their classpath.
 |-------------------------------------------|---------------------------------------------------------------------------------|
 | `io.github.problem4j.spring.web`          | `buildProblem { }` DSL, `Problem` and `ProblemContext` operators and extensions |
 | `io.github.problem4j.spring.web.resolver` | `problemResolver<E> { }` factories                                              |
-| `io.github.problem4j.spring.webmvc`       | `adviceWebMvcInspector { }` factories                                           |
-| `io.github.problem4j.spring.webflux`      | `adviceWebFluxInspector { }` factories                                          |
+| `io.github.problem4j.spring.webmvc`       | `adviceWebMvcInspector { }` factories, `problemContextWebMvcFilter { }` DSL     |
+| `io.github.problem4j.spring.webflux`      | `adviceWebFluxInspector { }` factories, `problemContextWebFluxFilter { }` DSL   |
 
 ## Functional `ProblemResolver`
 
@@ -82,6 +82,66 @@ class LoggingInspectorConfiguration {
         ex.javaClass.simpleName,
     )
   }
+}
+```
+
+## Customizing Context Filters
+
+`ProblemContextWebMvcFilter` and `ProblemContextWebFluxFilter` assign `ProblemContext` and `traceId` to each request
+(see [Simple Tracing](./additional-features#simple-tracing)). The `problemContextWebMvcFilter` and
+`problemContextWebFluxFilter` functions create one customized with a DSL, without subclassing. Declaring it as a
+`@Bean` replaces the default filter.
+
+- `createTraceId { ... }` - replaces default trace ID generation (random UUID without dashes); used only if no trace ID
+  is found in request attributes nor in configured tracing header,
+- `onContext { ... }` - called after `ProblemContext` is assigned to request attributes, before the rest of the filter
+  chain,
+- `onComplete { ... }` - called after the rest of the filter chain, regardless of whether it completed normally or
+  failed (`finally` in WebMVC, `doFinally` in WebFlux),
+- `contextWrite { ... }` - WebFlux only, enriches Reactor `Context` propagated to the rest of the filter chain.
+
+Callbacks of the same kind can be registered multiple times and are invoked in registration order.
+
+```kotlin
+import io.github.problem4j.spring.web.ProblemContextSettings
+import io.github.problem4j.spring.webmvc.ProblemContextWebMvcFilter
+import io.github.problem4j.spring.webmvc.problemContextWebMvcFilter
+import org.slf4j.MDC
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+
+@Configuration(proxyBeanMethods = false)
+class ProblemContextFilterConfiguration {
+
+  @Bean
+  fun problemContextWebMvcFilter(settings: ProblemContextSettings): ProblemContextWebMvcFilter =
+      problemContextWebMvcFilter(settings) {
+        onContext { _, _, context -> MDC.put("traceId", context["traceId"]) }
+        onComplete { _, _, _ -> MDC.remove("traceId") }
+      }
+}
+```
+
+In WebFlux, MDC is not a reliable carrier, as a request may hop between threads. Propagate values through Reactor
+`Context` instead.
+
+```kotlin
+import io.github.problem4j.spring.web.ProblemContextSettings
+import io.github.problem4j.spring.webflux.ProblemContextWebFluxFilter
+import io.github.problem4j.spring.webflux.problemContextWebFluxFilter
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+
+@Configuration(proxyBeanMethods = false)
+class ProblemContextFilterConfiguration {
+
+  @Bean
+  fun problemContextWebFluxFilter(settings: ProblemContextSettings): ProblemContextWebFluxFilter =
+      problemContextWebFluxFilter(settings) {
+        contextWrite { ctx, exchange, _ ->
+          ctx.put("tenant", exchange.request.headers.getFirst("X-Tenant") ?: "none")
+        }
+      }
 }
 ```
 

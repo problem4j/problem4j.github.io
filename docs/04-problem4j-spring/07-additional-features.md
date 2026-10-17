@@ -43,7 +43,8 @@ For providing a unique identifier, for helping to resolve `instance` field, libr
 That `traceId` is generated, or retrieved from HTTP header and is available in `context.traceId` (during interpolation)
 or as `@RequestAttribute(AttributeSupport.TRACE_ID_ATTRIBUTE)`. See `ProblemContextWebFluxFilter` or
 `ProblemContextWebMvcFilter` for actual implementations. **Note** that these can be extended and replaced, as all
-`@Bean`-s provided by this library are marked with `@ConditionalOnMissingBean`.
+`@Bean`-s provided by this library are marked with `@ConditionalOnMissingBean`. In Kotlin, see
+[Customizing Context Filters](./kotlin-support#customizing-context-filters) for a DSL alternative to subclassing.
 
 Available configuration properties:
 
