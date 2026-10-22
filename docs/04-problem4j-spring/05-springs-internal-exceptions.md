@@ -4,7 +4,8 @@ sidebar_position: 5
 
 # Spring's Internal Exceptions
 
-Selected set of most common Spring exceptions handled by Problem4J Spring.
+Selected set of most common Spring exceptions handled by Problem4J Spring. For a complete listing, including what
+unknown exceptions resolve into, see [Exception Resolution Reference](../appendix/exception-resolution-reference).
 
 ## Occurrences of `TypeMismatchException`
 
