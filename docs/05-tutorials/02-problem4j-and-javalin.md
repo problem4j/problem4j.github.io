@@ -17,7 +17,7 @@ long as you can catch exceptions and convert them to `Problem` instances. This p
     <dependency>
         <groupId>io.github.problem4j</groupId>
         <artifactId>problem4j-core</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.1</version>
     </dependency>
     <dependency>
         <groupId>io.github.problem4j</groupId>
@@ -29,7 +29,7 @@ long as you can catch exceptions and convert them to `Problem` instances. This p
 
 ```kt
 dependencies {
-    implementation("io.github.problem4j:problem4j-core:2.0.0")
+    implementation("io.github.problem4j:problem4j-core:2.0.1")
     implementation("io.github.problem4j:problem4j-jackson3:2.0.0")
 }
 ```

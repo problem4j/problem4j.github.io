@@ -66,12 +66,12 @@ not** declare `jackson-databind` as a transitive dependency.
        <dependency>
            <groupId>com.fasterxml.jackson.core</groupId>
            <artifactId>jackson-databind</artifactId>
-           <version>2.21.3</version>
+           <version>2.22.4</version>
        </dependency>
        <dependency>
            <groupId>io.github.problem4j</groupId>
            <artifactId>problem4j-core</artifactId>
-           <version>2.0.0</version>
+           <version>2.0.1</version>
        </dependency>
        <dependency>
            <groupId>io.github.problem4j</groupId>
@@ -83,8 +83,8 @@ not** declare `jackson-databind` as a transitive dependency.
 2. Gradle (Kotlin DSL):
    ```kt
    dependencies {
-       implementation("com.fasterxml.jackson.core:jackson-databind:2.21.3")
-       implementation("io.github.problem4j:problem4j-core:2.0.0")
+       implementation("com.fasterxml.jackson.core:jackson-databind:2.22.4")
+       implementation("io.github.problem4j:problem4j-core:2.0.1")
        implementation("io.github.problem4j:problem4j-jackson2:2.0.0")
    }
    ```

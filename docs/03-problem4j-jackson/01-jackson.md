@@ -77,12 +77,12 @@ not** declare `jackson-databind` as a transitive dependency.
        <dependency>
            <groupId>tools.jackson.core</groupId>
            <artifactId>jackson-databind</artifactId>
-           <version>3.1.2</version>
+           <version>3.2.4</version>
        </dependency>
        <dependency>
            <groupId>io.github.problem4j</groupId>
            <artifactId>problem4j-core</artifactId>
-           <version>2.0.0</version>
+           <version>2.0.1</version>
        </dependency>
        <dependency>
            <groupId>io.github.problem4j</groupId>
@@ -94,8 +94,8 @@ not** declare `jackson-databind` as a transitive dependency.
 2. Gradle (Kotlin DSL):
    ```kt
    dependencies {
-       implementation("tools.jackson.core:jackson-databind:3.1.2")
-       implementation("io.github.problem4j:problem4j-core:2.0.0")
+       implementation("tools.jackson.core:jackson-databind:3.2.4")
+       implementation("io.github.problem4j:problem4j-core:2.0.1")
        implementation("io.github.problem4j:problem4j-jackson3:2.0.0")
    }
    ```

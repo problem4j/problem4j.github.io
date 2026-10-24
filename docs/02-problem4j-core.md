@@ -13,14 +13,14 @@ higher is required to use this library.
        <dependency>
            <groupId>io.github.problem4j</groupId>
            <artifactId>problem4j-core</artifactId>
-           <version>2.0.0</version>
+           <version>2.0.1</version>
        </dependency>
    </dependencies>
    ```
 2. Gradle (Groovy or Kotlin DSL):
    ```kt
    dependencies {
-       implementation("io.github.problem4j:problem4j-core:2.0.0")
+       implementation("io.github.problem4j:problem4j-core:2.0.1")
    }
     ```
 
