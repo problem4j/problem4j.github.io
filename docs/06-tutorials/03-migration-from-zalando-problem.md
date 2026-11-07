@@ -1,5 +1,7 @@
 ---
 sidebar_position: 3
+sidebar_custom_props:
+  icon: 🚚
 ---
 
 # Migration from Zalando Problem
@@ -17,7 +19,7 @@ across non-Spring modules, and avoids mixing control-flow (exceptions) with resp
 Rewriting every exception in a large codebase in one go usually isn't realistic, so this guide shows how to run both
 libraries side by side: keep your existing `AbstractThrowableProblem` exceptions working exactly as before, while new
 code is written against Problem4J. Once the old exceptions are migrated (or simply left to throw plain exceptions
-mapped through `@ProblemMapping`/`ProblemResolver`), the `zalando:problem` dependency and the bridge below can be
+mapped through `ProblemResolver`/`@ProblemMapping`), the `zalando:problem` dependency and the bridge below can be
 removed entirely.
 
 ## Getting Started
@@ -87,8 +89,8 @@ public class ThrowableProblemResolver implements ProblemResolver {
 ```
 
 With this resolver in place, existing code that throws `AbstractThrowableProblem` subclasses keeps working unchanged,
-while any new exception can be written against Problem4J directly using `ProblemException`, `@ProblemMapping`, or its
-own `ProblemResolver`, as described in [Exception Handling](../problem4j-spring/exception-handling). Once every
+while any new exception can be written against Problem4J directly using its own `ProblemResolver`, `@ProblemMapping`, or
+`ProblemException`, as described in [Exception Handling](../04-problem4j-spring/02-exception-handling.md). Once every
 `AbstractThrowableProblem` usage has been migrated, delete this resolver together with the `org.zalando:problem`
 dependency.
 

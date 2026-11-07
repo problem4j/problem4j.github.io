@@ -68,9 +68,22 @@ const config: Config = {
     ],
   ],
 
+  themes: [
+    [
+      '@easyops-cn/docusaurus-search-local',
+      {
+        hashed: true,
+        indexBlog: false,
+        docsRouteBasePath: '/docs',
+        highlightSearchTermsOnTargetPage: true,
+        explicitSearchResultPath: true,
+      },
+    ],
+  ],
+
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/problem4j-social-card.jpg',
+    image: 'img/problem4j-social-preview.jpeg',
     colorMode: {
       respectPrefersColorScheme: true,
     },
@@ -81,17 +94,16 @@ const config: Config = {
         src: 'img/problem4j.png',
       },
       items: [
-        // {
-        //   type: 'docSidebar',
-        //   sidebarId: 'tutorialSidebar',
-        //   position: 'left',
-        //   label: 'Docs',
-        // },
-        {to: '/docs/intro', label: 'Intro', position: 'left'},
-        {to: '/docs/problem4j-core', label: 'Problem4J Core', position: 'left'},
-        {to: '/docs/problem4j-jackson/jackson', label: 'Problem4J Jackson', position: 'left'},
-        {to: '/docs/category/problem4j-spring', label: 'Problem4J Spring', position: 'left'},
-        {to: '/blog', label: 'Blog', position: 'left'},
+        {
+          type: 'docSidebar',
+          sidebarId: 'tutorialSidebar',
+          position: 'left',
+          label: 'Docs',
+        },
+        {
+          type: 'search',
+          position: 'right',
+        },
         {
           href: 'https://github.com/problem4j',
           label: 'GitHub',
@@ -120,6 +132,10 @@ const config: Config = {
             {
               label: 'Problem4J Spring',
               to: '/docs/category/problem4j-spring',
+            },
+            {
+              label: 'Problem4J Gson',
+              to: '/docs/problem4j-gson',
             },
           ],
         },
@@ -155,14 +171,20 @@ const config: Config = {
               label: 'Spring Boot',
               href: 'https://docs.spring.io/spring-boot/index.html'
             },
-            {
-              label: 'Docusaurus',
-              href: 'https://docusaurus.io/',
-            },
           ],
         },
       ],
-      copyright: `Copyright 2025-present the original author or authors.`,
+      logo: {
+        alt: 'Problem4J Logo',
+        src: 'img/problem4j.png',
+        width: 40,
+        height: 40,
+      },
+      copyright:
+        '<strong>Problem4J</strong><br/>' +
+        '© 2025-present the original author or authors · ' +
+        '<a class="footer__link-item" href="https://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a> · ' +
+        'Built with <a class="footer__link-item" href="https://docusaurus.io/">Docusaurus</a>',
     },
     prism: {
       theme: prismThemes.github,

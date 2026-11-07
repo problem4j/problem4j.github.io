@@ -1,6 +1,6 @@
 {
   "label": "Appendix",
-  "position": 6,
+  "position": 7,
   "link": {
     "type": "generated-index",
     "description": "Reference material for Problem4J - complete listings of default behaviour, to look things up rather than read through."

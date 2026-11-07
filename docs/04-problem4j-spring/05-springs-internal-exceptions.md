@@ -1,11 +1,14 @@
 ---
 sidebar_position: 5
+sidebar_custom_props:
+  icon: 🍃
 ---
 
 # Spring's Internal Exceptions
 
 Selected set of most common Spring exceptions handled by Problem4J Spring. For a complete listing, including what
-unknown exceptions resolve into, see [Exception Resolution Reference](../appendix/exception-resolution-reference).
+unknown exceptions resolve into, see
+[Exception Resolution Reference](../07-appendix/01-exception-resolution-reference.md).
 
 ## Occurrences of `TypeMismatchException`
 
@@ -23,12 +26,9 @@ Triggered for example when trying to pass `String` value into `@RequestParam("pa
 
 ## Occurrences of `ErrorResponseException`
 
-Similar to `ProblemException`, but comes from Spring and relies on mutable `ProblemDetails` object.
-
-Explicitly thrown `ErrorResponseException` (or subclasses like `ResponseStatusException`). Each of these exceptions
-carry HTTP status within it as well as details to be used in `application/problem+json` response.
-
-Example:
+`ErrorResponseException` is Spring's counterpart of `ProblemException`. It carries an HTTP status and a
+`ProblemDetail`, which is copied into the response whole - `type`, `title`, `detail`, `instance` and all custom
+properties.
 
 ```json
 {
@@ -39,6 +39,9 @@ Example:
     "instance" : "https://example.org/instances/123"
 }
 ```
+
+Its subclass `ResponseStatusException` keeps only the status, as its reason often contains internal details. See
+[Exception Resolution Reference](../07-appendix/01-exception-resolution-reference.md#springs-generic-status-exceptions).
 
 ## General HTTP Stuff
 

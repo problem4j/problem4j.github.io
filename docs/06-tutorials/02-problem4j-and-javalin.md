@@ -1,5 +1,7 @@
 ---
 sidebar_position: 2
+sidebar_custom_props:
+  icon: ⚡
 ---
 
 # Problem4J & Javalin
@@ -35,7 +37,7 @@ dependencies {
 ```
 
 Note that this example also assumes, for JSON serialization, that you use Jackson (`JsonMapper`) in either v2 or v3 and
-the compatible [Problem4J Jackson](../problem4j-jackson/jackson) module.
+the compatible [Problem4J Jackson](../03-problem4j-jackson/01-jackson.md) module.
 
 ```java
 JsonMapper jsonMapper = JsonMapper.builder().findAndAddModules().build();

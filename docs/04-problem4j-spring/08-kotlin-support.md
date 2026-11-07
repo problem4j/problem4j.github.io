@@ -1,5 +1,7 @@
 ---
 sidebar_position: 8
+sidebar_custom_props:
+  icon: 🟣
 ---
 
 # Kotlin Support
@@ -33,7 +35,7 @@ subclassing `AbstractProblemResolver`. The lambda is a `ProblemBuilderSpec` bloc
 resolver - override it with `status(...)` when needed. The exception is passed already cast to `E`.
 
 Declare it as a `@Bean` to have it loaded into the Problem4J ecosystem, same as any other resolver (see
-[Implementing `ProblemResolver`](./exception-handling#implementing-problemresolver)).
+[Implementing `ProblemResolver`](./02-exception-handling.md#implementing-problemresolver)).
 
 ```kotlin
 import io.github.problem4j.spring.web.resolver.ProblemResolver
@@ -58,8 +60,8 @@ class ProblemConfiguration {
 ## Functional Advice Inspectors
 
 `AdviceWebMvcInspector` and `AdviceWebFluxInspector` observe every `Problem` before it is written to the response (see
-[Logging](./logging)). The `adviceWebMvcInspector` and `adviceWebFluxInspector` functions create one from a lambda, each
-in three overloads, so a lambda declares only the arguments it uses.
+[Logging](./03-logging.md)). The `adviceWebMvcInspector` and `adviceWebFluxInspector` functions create one from a
+lambda, each in three overloads, so a lambda declares only the arguments it uses.
 
 ```kotlin
 import io.github.problem4j.spring.webmvc.AdviceWebMvcInspector
@@ -88,7 +90,7 @@ class LoggingInspectorConfiguration {
 ## Customizing Context Filters
 
 `ProblemContextWebMvcFilter` and `ProblemContextWebFluxFilter` assign `ProblemContext` and `traceId` to each request
-(see [Simple Tracing](./additional-features#simple-tracing)). The `problemContextWebMvcFilter` and
+(see [Simple Tracing](./07-additional-features.md#simple-tracing)). The `problemContextWebMvcFilter` and
 `problemContextWebFluxFilter` functions create one customized with a DSL, without subclassing. Declaring it as a
 `@Bean` replaces the default filter.
 

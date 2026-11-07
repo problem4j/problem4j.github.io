@@ -1,5 +1,7 @@
 ---
 sidebar_position: 7
+sidebar_custom_props:
+  icon: 🧩
 ---
 
 # Additional Features
@@ -19,7 +21,7 @@ without re-evaluating the inheritance chain.
 
 Available configuration properties:
 
-- [`problem4j.resolver-caching.enabled`](./setting-up-and-configuration#problem4jresolver-cachingenabled)
+- [`problem4j.resolver-caching.enabled`](./01-setting-up-and-configuration.md#problem4jresolver-cachingenabled)
 
 The caching mechanism in `CachingProblemResolverStore` uses a `ConcurrentHashMap` to avoid external dependencies. This
 is intentionally minimalistic and users can override it by supplying your own `ProblemResolverStore` implementation,
@@ -44,8 +46,8 @@ That `traceId` is generated, or retrieved from HTTP header and is available in `
 or as `@RequestAttribute(AttributeSupport.TRACE_ID_ATTRIBUTE)`. See `ProblemContextWebFluxFilter` or
 `ProblemContextWebMvcFilter` for actual implementations. **Note** that these can be extended and replaced, as all
 `@Bean`-s provided by this library are marked with `@ConditionalOnMissingBean`. In Kotlin, see
-[Customizing Context Filters](./kotlin-support#customizing-context-filters) for a DSL alternative to subclassing.
+[Customizing Context Filters](./08-kotlin-support.md#customizing-context-filters) for a DSL alternative to subclassing.
 
 Available configuration properties:
 
-- [`problem4j.tracing-header-name`](./setting-up-and-configuration#problem4jtracing-header-name)
+- [`problem4j.tracing-header-name`](./01-setting-up-and-configuration.md#problem4jtracing-header-name)

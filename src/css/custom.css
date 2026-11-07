@@ -4,27 +4,89 @@
  * work well for content-centric websites.
  */
 
-/* You can override the default Infima variables here. */
+/* Teal and green palette matching the Problem4J GitHub social preview. */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-color-primary: #108a5c;
+  --ifm-color-primary-dark: #0f7c53;
+  --ifm-color-primary-darker: #0e754e;
+  --ifm-color-primary-darkest: #0b6040;
+  --ifm-color-primary-light: #12986a;
+  --ifm-color-primary-lighter: #13a06f;
+  --ifm-color-primary-lightest: #15b47c;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  --ifm-background-color: #ffffff;
+
+  --p4j-card-bg: #f6fbf9;
+  --p4j-card-border: #d5ebe2;
+  --p4j-card-shadow: rgba(14, 47, 54, 0.12);
+  --p4j-faq-question-bg: #e8f5ef;
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
+  --ifm-color-primary: #3ddc97;
+  --ifm-color-primary-dark: #26d78a;
+  --ifm-color-primary-darker: #24cb82;
+  --ifm-color-primary-darkest: #1da86b;
+  --ifm-color-primary-light: #54e0a4;
+  --ifm-color-primary-lighter: #60e2aa;
+  --ifm-color-primary-lightest: #84e9be;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+
+  --ifm-background-color: #0b1820;
+  --ifm-background-surface-color: #0f2029;
+  --ifm-navbar-background-color: #0f2029;
+
+  --p4j-card-bg: #102530;
+  --p4j-card-border: #1d3a44;
+  --p4j-card-shadow: rgba(0, 0, 0, 0.4);
+  --p4j-faq-question-bg: #14303b;
+}
+
+.footer--dark {
+  --ifm-footer-background-color: #0b1f2a;
+}
+
+[data-theme='dark'] .footer--dark {
+  --ifm-footer-background-color: #08141a;
+}
+
+/* Rounded corners matching the favicon. */
+.navbar__logo img {
+  border-radius: 22%;
+}
+
+.footer__logo {
+  border-radius: 22%;
+}
+
+.footer__copyright {
+  font-size: 0.8rem;
+}
+
+.footer__copyright strong {
+  font-size: 1rem;
+}
+
+/* FAQ entries rendered as cards. */
+.faq-card {
+  margin-bottom: 1.5rem;
+  padding: 0 1.25rem 0.25rem;
+  border: 1px solid var(--p4j-card-border);
+  border-radius: 12px;
+  background: var(--p4j-card-bg);
+  overflow: hidden;
+}
+
+.faq-card > h3:first-child {
+  margin: 0 -1.25rem 1rem;
+  padding: 0.9rem 1.25rem;
+  border-bottom: 1px solid var(--p4j-card-border);
+  border-left: 4px solid var(--ifm-color-primary);
+  background: var(--p4j-faq-question-bg);
+}
+
+.faq-card > :last-child {
+  margin-bottom: 1rem;
 }

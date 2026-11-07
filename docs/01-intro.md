@@ -33,10 +33,10 @@ An example of `application/problem+json` response on HTTP API would look as foll
 ```
 
 Problem4J itself aims to be generic enough to allow implementing integrations with various frameworks. Currently the
-only integrated frameworks are Jackson (aka `ObjectMapper`) for JSON/XML serialization and deserialization and Spring
-Boot (in form of Spring WebFlux and WebMVC) as a primary web framework presenting Problem4J in action. Please visit
-appropriate documentation pages for more info. Other integrations may come as well, but please note that nothing is
-considered as promised.
+only integrated frameworks are Jackson (aka `ObjectMapper`) for JSON/XML serialization and deserialization, Gson for
+JSON serialization and deserialization, and Spring Boot (in form of Spring WebFlux and WebMVC) as a primary web
+framework presenting Problem4J in action. Please visit appropriate documentation pages for more info. Other
+integrations may come as well, but please note that nothing is considered as promised.
 
 Minor information about resons for Problem4J's inception are described in the first blog post -
 [Problem4J Project Launch](/blog/2025-12-28-problem4j-project-launch).

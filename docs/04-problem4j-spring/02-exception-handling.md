@@ -1,105 +1,24 @@
 ---
 sidebar_position: 2
+sidebar_custom_props:
+  icon: 🧯
 ---
 
 # Exception Handling
 
 There are three main ways of returning `application/problem+json` responses from application exceptions. You can either
-extend `ProblemException`, annotate your exception with `@ProblemMapping` or implement `ProblemResolver` and declare it
-as a component.
+implement `ProblemResolver` and declare it as a component, annotate your exception with `@ProblemMapping` or extend
+`ProblemException`.
 
 This chapter also describes a few build-in Spring features are also integrated with returning `Problem` objects, however
 the top three are the most recommended
 
 Following subchapters dive deeper into these solutions.
 
-## Extending `ProblemException`
-
-If you use `ProblemException`, or your exceptions extend `ProblemException`, the library will automatically use the
-`Problem` instance provided by the exception when building the response. This is useful when you want full programmatic
-control over the `Problem` object.
-
-```java
-throw new ProblemException(
-    Problem.builder()
-        .type("https://example.org/errors/invalid-request")
-        .title("Invalid Request")
-        .status(400)
-        .detail("not a valid json")
-        .instance("https://example.org/instances/1234")
-        .build());
-```
-
-Will result in following response body:
-
-```json
-{
-  "type" : "https://example.org/errors/invalid-request",
-  "title" : "Invalid Request",
-  "status" : 400,
-  "detail" : "not a valid json",
-  "instance" : "https://example.org/instances/1234"
-}
-```
-
-For convenience, consider subclassing `ProblemException` and encapsulating building `Problem` object within.
-
-## Annotating `@ProblemMapping`
-
-For exceptions that cannot extend `ProblemException`, you can annotate them with `@ProblemMapping`. This allows you to
-declaratively map exception fields to a `Problem`.
-
-To extract values from target exception, it's possible to use placeholders for interpolation.
-
-- `{message}` - the exact `getMessage()` result from your exception,
-- `{context.traceId}` - the `context.getTraceId()` result for tracking error response with the actual request. The
-- `context` is something that is build in `@RestControllerAdvice`s and it contains processing metadata. Currently only
-- `traceId` is supported,
-- `{fieldName}` - any field name declared in exceptions and its superclasses (scanned from current class to its most
-  outer one).
-
-```java
-@ProblemMapping(
-    type = "https://example.org/errors/invalid-request",
-    title = "Invalid Request",
-    status = 400,
-    detail = "{message}: {fieldName}",
-    instance = "https://example.org/instances/{context.traceId}",
-    extensions = {"userId", "fieldName"})
-public class ExampleException extends RuntimeException {
-
-  private final String userId;
-  private final String fieldName;
-
-  public ExampleException(String userId, String fieldName) {
-    super("bad input for user " + userId);
-    this.userId = userId;
-    this.fieldName = fieldName;
-  }
-}
-```
-
-Will result in following response body:
-
-```json
-{
-  "type" : "https://example.org/errors/invalid-request",
-  "title" : "Invalid Request",
-  "status" : 400,
-  "detail" : "bad input for user 123: email",
-  "instance" : "https://example.org/instances/trace-789",
-  "userId" : "123",
-  "fieldName" : "email"
-}
-```
-
-**Note** that `@ProblemMapping` is inherited in subclasses so it's possible to rely on it for building exception classes
-hierarchy.
-
 ## Implementing `ProblemResolver`
 
-For exceptions, you can't modify, the primary way to integrate with Problem4J to create custom `ProblemResolver`
-and declare it as `@Component`.
+The primary way to integrate with Problem4J is to create custom `ProblemResolver` and declare it as `@Component`. It
+keeps domain exceptions free of annotations and fixed superclasses, and works also for exceptions you can't modify.
 
 `ProblemResolver` is an interface used by Problem4J's build-in `@RestControllerAdvice`-s that return `Problem` objects
 in response entity. After declaring it as a component for dependency injection, it will be loaded into
@@ -163,11 +82,114 @@ public class ExampleExceptionResolver implements ProblemResolver {
 
 Candidates with equal precedence are a configuration error - startup fails with an `IllegalStateException` naming the
 conflicting beans. Set
-[`problem4j.duplicate-resolver-policy=first`](./setting-up-and-configuration#problem4jduplicate-resolver-policy) to pick
-the first one registered instead.
+[`problem4j.duplicate-resolver-policy=first`](./01-setting-up-and-configuration.md#problem4jduplicate-resolver-policy)
+to pick the first one registered instead.
 
-For Kotlin projects, a resolver can also be declared from a lambda with `problemResolver<E> { }`. See
-[Kotlin Support](./kotlin-support#functional-problemresolver) chapter for more info.
+Since `3.1.0`, Kotlin projects can also declare a resolver from a lambda with `problemResolver<E> { }`, without
+implementing the interface. The exception is passed already cast to `E`, optionally preceded by `ProblemContext`.
+
+```kotlin
+@Configuration(proxyBeanMethods = false)
+class ProblemConfiguration {
+
+  @Bean
+  fun exampleExceptionResolver(): ProblemResolver =
+      problemResolver<ExampleException> { context, ex ->
+        type("https://example.org/errors/invalid-request")
+        title("Invalid Request")
+        status(400)
+        detail("bad input for user ${ex.userId}")
+        instance("https://example.org/instances/${context.traceId}")
+        extension("userId", ex.userId)
+        extension("fieldName", ex.fieldName)
+      }
+}
+```
+
+See [Kotlin Support](./08-kotlin-support.md#functional-problemresolver) chapter for more info.
+
+## Annotating `@ProblemMapping`
+
+For exceptions you own, you can annotate them with `@ProblemMapping`. This allows you to declaratively map exception
+fields to a `Problem`, without writing a resolver.
+
+To extract values from target exception, it's possible to use placeholders for interpolation.
+
+- `{message}` - the exact `getMessage()` result from your exception,
+- `{context.traceId}` - the `context.getTraceId()` result for tracking error response with the actual request. The
+- `context` is something that is build in `@RestControllerAdvice`s and it contains processing metadata. Currently only
+- `traceId` is supported,
+- `{fieldName}` - any field name declared in exceptions and its superclasses (scanned from current class to its most
+  outer one).
+
+```java
+@ProblemMapping(
+    type = "https://example.org/errors/invalid-request",
+    title = "Invalid Request",
+    status = 400,
+    detail = "{message}: {fieldName}",
+    instance = "https://example.org/instances/{context.traceId}",
+    extensions = {"userId", "fieldName"})
+public class ExampleException extends RuntimeException {
+
+  private final String userId;
+  private final String fieldName;
+
+  public ExampleException(String userId, String fieldName) {
+    super("bad input for user " + userId);
+    this.userId = userId;
+    this.fieldName = fieldName;
+  }
+}
+```
+
+Will result in following response body:
+
+```json
+{
+  "type" : "https://example.org/errors/invalid-request",
+  "title" : "Invalid Request",
+  "status" : 400,
+  "detail" : "bad input for user 123: email",
+  "instance" : "https://example.org/instances/trace-789",
+  "userId" : "123",
+  "fieldName" : "email"
+}
+```
+
+**Note** that `@ProblemMapping` is inherited in subclasses so it's possible to rely on it for building exception classes
+hierarchy.
+
+## Extending `ProblemException`
+
+If you use `ProblemException`, or your exceptions extend `ProblemException`, the library will automatically use the
+`Problem` instance provided by the exception when building the response. This is useful when you want full programmatic
+control over the `Problem` object.
+
+```java
+throw new ProblemException(
+    Problem.builder()
+        .type("https://example.org/errors/invalid-request")
+        .title("Invalid Request")
+        .status(400)
+        .detail("not a valid json")
+        .instance("https://example.org/instances/1234")
+        .build());
+```
+
+Will result in following response body:
+
+```json
+{
+  "type" : "https://example.org/errors/invalid-request",
+  "title" : "Invalid Request",
+  "status" : 400,
+  "detail" : "not a valid json",
+  "instance" : "https://example.org/instances/1234"
+}
+```
+
+For convenience, consider subclassing `ProblemException` and encapsulating building `Problem` object within.
 
 ## Custom `@RestControllerAdvice`
 
@@ -282,10 +304,12 @@ Will result in following response body:
 
 If you can't use `problem4j-spring` (or don't want to), but the idea of `Problem` objects is appealing to you, you may
 want to consider relying purely on [`problem4j-core`][problem4j-core] and [`problem4j-jackson`][problem4j-jackson]
-libraries. You can build any mechanism for resolving exceptions into `Problem` objects yourself, depending on your own
+(or [`problem4j-gson`][problem4j-gson]) libraries. You can build any mechanism for resolving exceptions into `Problem` objects yourself, depending on your own
 frameworks, requirements or any other policies. See other documentation pages for more details about using other
 Problem4J modules without Problem4J Spring integration.
 
 [problem4j-core]: https://github.com/problem4j/problem4j-core
 
 [problem4j-jackson]: https://github.com/problem4j/problem4j-jackson
+
+[problem4j-gson]: https://github.com/problem4j/problem4j-gson

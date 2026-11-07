@@ -7,22 +7,21 @@ sidebar_position: 2
 Add library as dependency to Maven or Gradle. See the actual versions on [Maven Central][maven-central]. **Java 8** or
 higher is required to use this library.
 
-1. Maven:
-   ```xml
-   <dependencies>
-       <dependency>
-           <groupId>io.github.problem4j</groupId>
-           <artifactId>problem4j-core</artifactId>
-           <version>2.0.1</version>
-       </dependency>
-   </dependencies>
-   ```
-2. Gradle (Groovy or Kotlin DSL):
-   ```kt
-   dependencies {
-       implementation("io.github.problem4j:problem4j-core:2.0.1")
-   }
-    ```
+```xml
+<dependencies>
+    <dependency>
+        <groupId>io.github.problem4j</groupId>
+        <artifactId>problem4j-core</artifactId>
+        <version>2.0.1</version>
+    </dependency>
+</dependencies>
+```
+
+```kt
+dependencies {
+    implementation("io.github.problem4j:problem4j-core:2.0.1")
+}
+```
 
 ## Usage
 

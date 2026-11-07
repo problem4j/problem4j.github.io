@@ -1,25 +1,27 @@
 ---
 sidebar_position: 1
+sidebar_custom_props:
+  icon: 📚
 ---
 
 # Exception Resolution Reference
 
 Complete listing of what Problem4J Spring responds with for each Spring exception it handles out of the box, and for
 exceptions it knows nothing about. Use it to look up a particular response - for an introduction, see
-[Exception Handling](../problem4j-spring/exception-handling) and
-[Spring's Internal Exceptions](../problem4j-spring/springs-internal-exceptions).
+[Exception Handling](../04-problem4j-spring/02-exception-handling.md) and
+[Spring's Internal Exceptions](../04-problem4j-spring/05-springs-internal-exceptions.md).
 
 All responses below are the defaults, before any of your customizations are applied:
 
 - `title` is always derived from `status` (e.g. `400` becomes `"Bad Request"`), unless stated otherwise.
 - `detail` texts are shown in the default `capitalized` format. With
-  [`problem4j.detail-format`](../problem4j-spring/setting-up-and-configuration#problem4jdetail-format) set to
+  [`problem4j.detail-format`](../04-problem4j-spring/01-setting-up-and-configuration.md#problem4jdetail-format) set to
   `lowercase` or `uppercase`, they become `"validation failed"` or `"VALIDATION FAILED"`. Details copied from the
   exception itself (`ErrorResponseException`, `@ResponseStatus` reason) are never reformatted.
-- [`ProblemPostProcessor`](../problem4j-spring/problem-post-processor) (`type`, `title` and `instance` overrides) runs
-  afterward, on every response listed here.
+- [`ProblemPostProcessor`](../04-problem4j-spring/06-problem-post-processor.md) (`type`, `title` and `instance`
+  overrides) runs afterward, on every response listed here.
 - Every built-in resolver can be replaced by declaring your own `ProblemResolver` bean for the same exception class (see
-  [Implementing `ProblemResolver`](../problem4j-spring/exception-handling#implementing-problemresolver)).
+  [Implementing `ProblemResolver`](../04-problem4j-spring/02-exception-handling.md#implementing-problemresolver)).
 
 ## How an Exception Is Resolved
 
@@ -75,7 +77,7 @@ WebFlux-only exceptions don't need to be told apart in your configuration.
 }
 ```
 
-See [Validation Errors](../problem4j-spring/validation-errors) for how field names are resolved and customized.
+See [Validation Errors](../04-problem4j-spring/04-validation-errors.md) for how field names are resolved and customized.
 
 ## Type Conversion and Request Body
 
@@ -171,7 +173,7 @@ is `Content Too Large`, per [RFC 9110 §15.5.14][rfc9110-15.5.14].
 }
 ```
 
-For accessing unregistered paths, see also [FAQ](../problem4j-spring/faq).
+For accessing unregistered paths, see also [FAQ](../04-problem4j-spring/09-faq.md).
 
 ## Spring's Generic Status Exceptions
 
@@ -207,7 +209,7 @@ Any exception not covered by the steps in [How an Exception Is Resolved](#how-an
 ```
 
 The exception's message, class and stack trace are never part of the response. To log them, use
-[advice inspectors](../problem4j-spring/logging).
+[advice inspectors](../04-problem4j-spring/03-logging.md).
 
 The same response is returned if resolution itself fails, e.g. when a custom `ProblemResolver` or
 `ProblemPostProcessor` throws. In that case, a warning is logged with the exception thrown during resolution, along with

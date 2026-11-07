@@ -1,5 +1,7 @@
 ---
 sidebar_position: 3
+sidebar_custom_props:
+  icon: 📝
 ---
 
 # Logging
@@ -13,7 +15,7 @@ The primary goal of these inspectors is to let developers customize logging in t
 use them for other purposes such as metrics collection, auditing, or debugging.
 
 In Kotlin, an inspector can be declared from a lambda instead of a class - see
-[Kotlin Support](./kotlin-support#functional-advice-inspectors) chapter.
+[Kotlin Support](./08-kotlin-support.md#functional-advice-inspectors) chapter.
 
 ```java
 @Component

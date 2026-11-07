@@ -1,5 +1,7 @@
 ---
 sidebar_position: 1
+sidebar_custom_props:
+  icon: ⚙️
 ---
 
 # Setting Up & Configuration
@@ -20,30 +22,29 @@ with repository in your dependency manager. **Java 17** or higher is required to
 Use version from the above table while managing your dependency or visit Maven Central to find out latest version in
 given generation.
 
-1. Maven:
-   ```xml
-   <dependencies>
-       <!-- pick the one for your project -->
-       <dependency>
-           <groupId>io.github.problem4j</groupId>
-           <artifactId>problem4j-spring-webflux</artifactId>
-           <version>{version}</version>
-       </dependency>
-       <dependency>
-           <groupId>io.github.problem4j</groupId>
-           <artifactId>problem4j-spring-webmvc</artifactId>
-           <version>{version}</version>
-       </dependency>
-   </dependencies>
-   ```
-2. Gradle (Kotlin DSL):
-   ```kt
-   dependencies {
-       // pick the one for your project
-       implementation("io.github.problem4j:problem4j-spring-webflux:{version}")
-       implementation("io.github.problem4j:problem4j-spring-webmvc:{version}")
-   }
-   ```
+```xml
+<dependencies>
+    <!-- pick the one for your project -->
+    <dependency>
+        <groupId>io.github.problem4j</groupId>
+        <artifactId>problem4j-spring-webflux</artifactId>
+        <version>{version}</version>
+    </dependency>
+    <dependency>
+        <groupId>io.github.problem4j</groupId>
+        <artifactId>problem4j-spring-webmvc</artifactId>
+        <version>{version}</version>
+    </dependency>
+</dependencies>
+```
+
+```kt
+dependencies {
+    // pick the one for your project
+    implementation("io.github.problem4j:problem4j-spring-webflux:{version}")
+    implementation("io.github.problem4j:problem4j-spring-webmvc:{version}")
+}
+```
 
 **Note:** To limit the number of transitive dependencies, you need to include Spring Boot explicitly in your project.
 
@@ -67,28 +68,28 @@ Property that specifies the name of the HTTP header used for tracing requests. I
 header is extracted and stored in the request context (`ProblemContext`) under the `traceId` key. This value can be
 referenced in override templates using the `{context.traceId}` placeholder. Defaults to `null` (disabled).
 
-See [Simple Tracing](./additional-features#simple-tracing) chapter for more info.
+See [Simple Tracing](./07-additional-features.md#simple-tracing) chapter for more info.
 
 ### `problem4j.type-override`
 
 Defines a template for overriding the `"type"` field of `Problem` responses. Useful for mapping logical problem
 identifiers to environment-specific URIs (for example, production vs. staging). Defaults to `null` (disabled).
 
-See [Problem Post-Processor](./problem-post-processor) chapter for more info.
+See [Problem Post-Processor](./06-problem-post-processor.md) chapter for more info.
 
 ### `problem4j.title-override`
 
 Defines a template for overriding the `"title"` field of `Problem` responses. Useful for applying a consistent title
 format across all problems or injecting runtime context into the title. Defaults to `null` (disabled).
 
-See [Problem Post-Processor](./problem-post-processor) chapter for more info.
+See [Problem Post-Processor](./06-problem-post-processor.md) chapter for more info.
 
 ### `problem4j.instance-override`
 
 Defines a template for overriding the `"instance"` field of `Problem` responses. Useful for appending runtime context
 such as request trace identifiers or constructing predictable instance URIs. Defaults to `null` (disabled).
 
-See [Problem Post-Processor](./problem-post-processor) chapter for more info.
+See [Problem Post-Processor](./06-problem-post-processor.md) chapter for more info.
 
 ### `problem4j.duplicate-resolver-policy`
 
@@ -96,7 +97,7 @@ Decides what happens when several `ProblemResolver` beans handle the same except
 (`fail` - **default**, `first`). With `fail`, application startup fails with an `IllegalStateException` naming the
 conflicting beans. With `first`, the first one registered in the application context is used.
 
-See [Implementing `ProblemResolver`](./exception-handling#implementing-problemresolver) chapter for more info on
+See [Implementing `ProblemResolver`](./02-exception-handling.md#implementing-problemresolver) chapter for more info on
 resolver precedence.
 
 ### `problem4j.resolver-caching.enabled`
@@ -105,6 +106,6 @@ Enables caching of resolved `ProblemResolver` instances to avoid repeated reflec
 (disabled). When disabled, every resolution performs a fresh lookup. Enable if you have many repeated resolutions of a
 stable set of exception / resolver types.
 
-See [Resolver Caching](./additional-features#resolver-caching) chapter for more info.
+See [Resolver Caching](./07-additional-features.md#resolver-caching) chapter for more info.
 
 [maven-central]: https://central.sonatype.com/namespace/io.github.problem4j

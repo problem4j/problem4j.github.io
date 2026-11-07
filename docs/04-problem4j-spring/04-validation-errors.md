@@ -1,5 +1,7 @@
 ---
 sidebar_position: 4
+sidebar_custom_props:
+  icon: ✅
 ---
 
 # Validation Errors
@@ -79,25 +81,6 @@ same goes for `@PathVariable`, `@RequestHeader`, `@CookieValue` etc.).
 [`MethodValidationProblemResolver`][MethodValidationProblemResolver] contains implementation of retrieving configured
 values from parameter annotations.
 
-> For Spring Boot versions lower than `3.5`, the above-mentioned property is not available and one must configure it
-> programmatically. Consider checking up `org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration`
-> and [Method Validation Exceptions][method-validation-exceptions] chapter of Spring Framework documentation.
->
-> ```java
-> @Configuration
-> public class ExampleConfiguration {
->
->   @Bean
->   public MethodValidationPostProcessor methodValidationPostProcessor() {
->     MethodValidationPostProcessor processor = new MethodValidationPostProcessor();
->     processor.setAdaptConstraintViolations(true);
->     return processor;
->   }
-> }
-> ```
-
-Method `setAdaptConstraintViolations` is available since Spring Framework `6.1` (therefore since Spring Boot `3.2`).
-
 ## Supporting `@ModelAttribute` and `@BindParam`
 
 Similarly, for `@ModelAttribute` method arguments (object that groups query or form params), violation field names are
@@ -147,6 +130,5 @@ Spring automatically assumes it to be a `@ModelAttribute`.
 constructors are present, Problem4J will skip evaluation of `@BindParam`. If it is a `record`, then actual arguments
 will be taken from **record's canonical constructor**, and additional constructors are ignored.
 
-[MethodValidationProblemResolver]: https://github.com/problem4j/problem4j-spring/blob/v2.2.4/problem4j-spring-web/src/main/java/io/github/problem4j/spring/web/resolver/MethodValidationProblemResolver.java
+[MethodValidationProblemResolver]: https://github.com/problem4j/problem4j-spring/blob/v3.0.0/problem4j-spring-web/src/main/java/io/github/problem4j/spring/web/resolver/MethodValidationProblemResolver.java
 
-[method-validation-exceptions]: https://docs.spring.io/spring-framework/reference/core/validation/beanvalidation.html#validation-beanvalidation-spring-method-exceptions

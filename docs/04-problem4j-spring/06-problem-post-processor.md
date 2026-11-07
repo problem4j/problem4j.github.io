@@ -1,5 +1,7 @@
 ---
 sidebar_position: 6
+sidebar_custom_props:
+  icon: 🔧
 ---
 
 # Problem Post-Processor
@@ -32,9 +34,9 @@ Available placeholders:
     - `{context.<key>}` - any value from the current request context (e.g. `{context.traceId}`)
 
 The `{context.<key>}` placeholder resolves values stored in `ProblemContext` for the current request. The built-in
-[Simple Tracing](./additional-features#simple-tracing) feature stores the trace identifier under the `traceId` key,
-making it available as `{context.traceId}`. You can also populate the context with custom keys by providing your own
-`ProblemContextFilter`.
+[Simple Tracing](./07-additional-features.md#simple-tracing) feature stores the trace identifier under the `traceId`
+key, making it available as `{context.traceId}`. You can also populate the context with custom keys by providing your
+own `ProblemContextFilter`.
 
 General post-processing rules:
 
@@ -53,9 +55,9 @@ These rules ensure that field transformation is safe and predictable while allow
 
 Available configuration properties:
 
-- [`problem4j.type-override`](./setting-up-and-configuration#problem4jtype-override)
-- [`problem4j.title-override`](./setting-up-and-configuration#problem4jtitle-override)
-- [`problem4j.instance-override`](./setting-up-and-configuration#problem4jinstance-override)
+- [`problem4j.type-override`](./01-setting-up-and-configuration.md#problem4jtype-override)
+- [`problem4j.title-override`](./01-setting-up-and-configuration.md#problem4jtitle-override)
+- [`problem4j.instance-override`](./01-setting-up-and-configuration.md#problem4jinstance-override)
 
 **Example:**
 
