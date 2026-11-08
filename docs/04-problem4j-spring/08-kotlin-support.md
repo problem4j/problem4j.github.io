@@ -20,12 +20,13 @@ the shared ones in `problem4j-spring-web` (a transitive dependency of both `prob
 required. Kotlin standard library is declared as `compileOnly`, so it does not leak into Java projects - Kotlin
 projects already have it on their classpath.
 
-| Package                                   | Contents                                                                        |
-|-------------------------------------------|---------------------------------------------------------------------------------|
-| `io.github.problem4j.spring.web`          | `buildProblem { }` DSL, `Problem` and `ProblemContext` operators and extensions |
-| `io.github.problem4j.spring.web.resolver` | `problemResolver<E> { }` factories                                              |
-| `io.github.problem4j.spring.webmvc`       | `adviceWebMvcInspector { }` factories, `problemContext` accessors               |
-| `io.github.problem4j.spring.webflux`      | `adviceWebFluxInspector { }` factories, `problemContext` accessors              |
+| Package                                    | Contents                                                                        |
+|--------------------------------------------|---------------------------------------------------------------------------------|
+| `io.github.problem4j.spring.web`           | `buildProblem { }` DSL, `Problem` and `ProblemContext` operators and extensions |
+| `io.github.problem4j.spring.web.parameter` | `Violation` destructuring                                                       |
+| `io.github.problem4j.spring.web.resolver`  | `problemResolver<E> { }` factories                                              |
+| `io.github.problem4j.spring.webmvc`        | `adviceWebMvcInspector { }` factories, `problemContext` accessors               |
+| `io.github.problem4j.spring.webflux`       | `adviceWebFluxInspector { }` factories, `problemContext` accessors              |
 
 ## Functional `ProblemResolver`
 
@@ -62,6 +63,10 @@ class ProblemConfiguration {
 `AdviceWebMvcInspector` and `AdviceWebFluxInspector` observe every `Problem` before it is written to the response (see
 [Logging](./03-logging.md)). The `adviceWebMvcInspector` and `adviceWebFluxInspector` functions create one from a
 lambda, each in three overloads, so a lambda declares only the arguments it uses.
+
+- `(Problem, Exception) -> Unit`,
+- `(ProblemContext, Problem, Exception, WebRequest) -> Unit` - `ServerWebExchange` for WebFlux,
+- `(ProblemContext, Problem, Exception, HttpHeaders, HttpStatusCode, WebRequest) -> Unit` - WebMVC only.
 
 ```kotlin
 import io.github.problem4j.spring.webmvc.AdviceWebMvcInspector
@@ -149,6 +154,10 @@ Will result in following response body:
 
 Extensions with `null` values remove previously added extension with the same name, same as in `ProblemBuilder`.
 
+Available block methods: `type`, `title` (resolved from HTTP status if not set), `status` (`Int` or `HttpStatusCode`),
+`detail`, `instance`, `extension` and `extensions` (from `Map`, `Pair`-s or `Problem.Extension`-s). The block is
+annotated with `@DslMarker`, so methods of an outer `buildProblem { }` can't be called implicitly from a nested one.
+
 ## Copying a `Problem`
 
 `Problem` is immutable, so modifying one means building a new instance from `toBuilder()`. The `copy` extension wraps
@@ -187,6 +196,27 @@ val attempts = problem.extension<Int>("attempts")
 
 val hasField = "field" in problem
 // hasField == true
+```
+
+## Destructuring
+
+`Problem.Extension` destructures into its name and value, and `Violation` (see
+[Validation Errors](./04-validation-errors.md)) into its field and error message.
+
+```kotlin
+import io.github.problem4j.spring.web.component1
+import io.github.problem4j.spring.web.component2
+
+for ((name, value) in problem.extensions) {
+  println("$name = $value")
+}
+```
+
+```kotlin
+import io.github.problem4j.spring.web.parameter.component1
+import io.github.problem4j.spring.web.parameter.component2
+
+val (field, error) = violation
 ```
 
 ## `ProblemBuilder` Extensions
