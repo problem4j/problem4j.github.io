@@ -42,7 +42,7 @@ public class ExampleExceptionResolver implements ProblemResolver {
         .title("Invalid Request")
         .status(400)
         .detail("bad input for user " + e.getUserId())
-        .instance("https://example.org/instances/" + context.getTraceId())
+        .instance("https://example.org/instances/" + context.get("traceId"))
         .extension("userId", e.getUserId())
         .extension("fieldName", e.getFieldName())
         .build();
@@ -99,7 +99,7 @@ class ProblemConfiguration {
         title("Invalid Request")
         status(400)
         detail("bad input for user ${ex.userId}")
-        instance("https://example.org/instances/${context.traceId}")
+        instance("https://example.org/instances/${context["traceId"]}")
         extension("userId", ex.userId)
         extension("fieldName", ex.fieldName)
       }
@@ -116,9 +116,8 @@ fields to a `Problem`, without writing a resolver.
 To extract values from target exception, it's possible to use placeholders for interpolation.
 
 - `{message}` - the exact `getMessage()` result from your exception,
-- `{context.traceId}` - the `context.getTraceId()` result for tracking error response with the actual request. The
-- `context` is something that is build in `@RestControllerAdvice`s and it contains processing metadata. Currently only
-- `traceId` is supported,
+- `{context.<key>}` - any value of the request's `ProblemContext`, e.g. `{context.traceId}` for tracking error response
+  with the actual request,
 - `{fieldName}` - any field name declared in exceptions and its superclasses (scanned from current class to its most
   outer one).
 
@@ -236,7 +235,7 @@ public class ExampleExceptionAdvice {
             .title("Invalid Request")
             .status(400)
             .detail(ex.getMessage())
-            .instance("https://example.org/instances/" + context.getTraceId())
+            .instance("https://example.org/instances/" + context.get("traceId"))
             .extension("userId", e.getUserId())
             .extension("fieldName", e.getFieldName())
             .build();
