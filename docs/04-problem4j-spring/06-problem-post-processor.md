@@ -34,7 +34,7 @@ Available placeholders:
     - `{context.<key>}` - any value from the current request context (e.g. `{context.traceId}`)
 
 The `{context.<key>}` placeholder resolves values stored in `ProblemContext` for the current request. The built-in
-[Simple Tracing](./07-additional-features.md#simple-tracing) feature stores the trace identifier under the `traceId`
+[Tracing](./07-additional-features.md#tracing) feature stores the trace identifier under the `traceId`
 key, making it available as `{context.traceId}`. You can also populate the context with custom keys by providing your
 own `ProblemContextFilter`.
 
