@@ -307,3 +307,45 @@ In Spring Boot `4.x`, these annotations live in separate modules - `@AutoConfigu
 `spring-boot-webtestclient`.
 
 </div>
+
+<div className="faq-card">
+
+### Does Problem4J work with `@WebMvcTest` and `@WebFluxTest`?
+
+Yes, since `3.1.0`. Problem4J auto-configurations are registered for Spring Boot test slices, so `@WebMvcTest` and
+`@WebFluxTest` apply the whole integration (resolvers, advices, `ProblemContext` filter, error handling) and return
+`application/problem+json` error responses. `@JsonTest`, `@RestClientTest` and `@WebClientTest` get `Problem`
+serialization (Jackson, Gson) and generic beans such as `ProblemMapper`, e.g. for reading `Problem` responses in API
+clients.
+
+Slices don't pick up regular `@Component` beans and `@Configuration` classes through component scanning. Custom
+`ProblemResolver`, `ProblemPostProcessor` or other Problem4J beans have to be imported explicitly, otherwise built-in
+defaults are used and the response may differ from the one of the running application. Exceptions annotated with
+`@ProblemMapping` and `ProblemException` need no extra setup.
+
+```java
+@WebMvcTest(OrderController.class)
+@Import(OrderNotFoundProblemResolver.class)
+class OrderControllerTest {
+
+  @Autowired private MockMvc mockMvc;
+
+  @Test
+  void givenMissingOrder_shouldReturnProblem() throws Exception {
+    mockMvc
+        .perform(get("/orders/42"))
+        .andExpect(status().isNotFound())
+        .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+        .andExpect(jsonPath("$.detail").value("Order not found"));
+  }
+}
+```
+
+To check a slice without Problem4J, e.g. to compare with Spring's default error responses, set
+[`problem4j.enabled=false`](./01-setting-up-and-configuration.md#problem4jenabled) in the slice annotation.
+
+```java
+@WebMvcTest(properties = "problem4j.enabled=false")
+```
+
+</div>
