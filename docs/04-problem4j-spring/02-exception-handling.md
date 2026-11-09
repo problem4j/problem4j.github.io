@@ -82,8 +82,8 @@ public class ExampleExceptionResolver implements ProblemResolver {
 
 Candidates with equal precedence are a configuration error - startup fails with an `IllegalStateException` naming the
 conflicting beans. Set
-[`problem4j.duplicate-resolver-policy=first`](./01-setting-up-and-configuration.md#problem4jduplicate-resolver-policy)
-to pick the first one registered instead.
+[`problem4j.duplicate-resolver-policy`](./01-setting-up-and-configuration.md#problem4jduplicate-resolver-policy) to
+`first` or `last` to pick the first or the last one registered instead.
 
 Since `3.1.0`, Kotlin projects can also declare a resolver from a lambda with `problemResolver<E> { }`, without
 implementing the interface. The exception is passed already cast to `E`, optionally preceded by `ProblemContext`.

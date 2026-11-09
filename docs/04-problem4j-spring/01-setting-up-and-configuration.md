@@ -107,8 +107,11 @@ See [Problem Post-Processor](./06-problem-post-processor.md) chapter for more in
 ### `problem4j.duplicate-resolver-policy`
 
 Decides what happens when several `ProblemResolver` beans handle the same exception class with equal precedence
-(`fail` - **default**, `first`). With `fail`, application startup fails with an `IllegalStateException` naming the
-conflicting beans. With `first`, the first one registered in the application context is used.
+(`fail` - **default**, `first`, `last`). With `fail`, application startup fails with an `IllegalStateException` naming
+the conflicting beans. With `first`, the first one registered in the application context is used. With `last`, the last
+one registered in the application context is used. As auto-configured resolvers are registered after application-defined
+ones, `last` makes a built-in resolver win over your own one with equal precedence, similarly to versions prior to
+`3.1.0`.
 
 See [Implementing `ProblemResolver`](./02-exception-handling.md#implementing-problemresolver) chapter for more info on
 resolver precedence.

@@ -44,8 +44,9 @@ handled by Spring Boot again, with its own `detail` and `instance` values.
 
 Two or more `ProblemResolver` beans handle the same exception class with equal precedence. Either mark the preferred
 resolver with `@Order` (lower value wins), or set
-[`problem4j.duplicate-resolver-policy=first`](./01-setting-up-and-configuration.md#problem4jduplicate-resolver-policy)
-to use the first one registered.
+[`problem4j.duplicate-resolver-policy`](./01-setting-up-and-configuration.md#problem4jduplicate-resolver-policy) to
+`first` or `last` to use the first or the last one registered. `last` keeps built-in resolvers winning over your own
+ones, as in versions prior to `3.1.0`.
 
 See [Implementing `ProblemResolver`](./02-exception-handling.md#implementing-problemresolver) chapter for more info.
 
