@@ -45,12 +45,12 @@ Problem4J assigns a trace identifier to every request and stores it in `ProblemC
 available as `{context.traceId}` placeholder in [overrides](./06-problem-post-processor.md) and `@ProblemMapping`, and
 in `ProblemResolver` implementations, which helps to resolve the `instance` field, or to find an error reported by a
 client in application logs. Where the trace identifier comes from is decided by
-[`problem4j.tracing.source`](./01-setting-up-and-configuration.md#problem4jtracingsource) property.
+[`problem4j.tracing-source`](./01-setting-up-and-configuration.md#problem4jtracing-source) property.
 
 - `auto` (default) - `micrometer` if `io.micrometer:micrometer-tracing` is on the classpath, `simple` otherwise.
 - `simple` - trace identifier is taken from the HTTP header configured with
-  [`problem4j.tracing-header-name`](./01-setting-up-and-configuration.md#problem4jtracing-header-name), or generated as
-  a random UUID without dashes.
+  [`problem4j.tracing-header-name`](./01-setting-up-and-configuration.md#problem4jtracing-header-name), or
+  generated as a random UUID without dashes.
 - `micrometer` - trace identifier is taken from the current Micrometer Tracing span (with OpenTelemetry or Brave
   bridge), so it's the same one that appears in logs. If the trace identifier comes from the span, span identifier of
   the server span is stored under `spanId` key as well, so both always belong to the same trace. Application startup
@@ -69,12 +69,12 @@ Header and generated values are used only if no span is available, e.g. if obser
 no tracing bridge is present (`Tracer.NOOP` spans have an empty trace identifier, so they're ignored). If a client sends
 W3C `traceparent` header, the trace it carries is continued, so the incoming trace identifier is used.
 
-If `problem4j.tracing-header-name` is set, the trace identifier is also written into the response header with that name,
-regardless of the source.
+If `problem4j.tracing-header-name` is set, the trace identifier is also written into the response header with
+that name, regardless of the source.
 
 ```properties
 problem4j.tracing-header-name=X-Trace-Id
-problem4j.instance-override=https://example.org/traces/{context.traceId}
+problem4j.extension-overrides.traceId={context.traceId}
 ```
 
 **Note** that `problem4j.tracing-header-name=traceparent` is not a way to use W3C trace context. With `simple` source,
@@ -93,7 +93,7 @@ extended and replaced, as all `@Bean`-s provided by this library are marked with
 
 Available configuration properties:
 
-- [`problem4j.tracing.source`](./01-setting-up-and-configuration.md#problem4jtracingsource)
+- [`problem4j.tracing-source`](./01-setting-up-and-configuration.md#problem4jtracing-source)
 - [`problem4j.tracing-header-name`](./01-setting-up-and-configuration.md#problem4jtracing-header-name)
 
 ### Custom Tracing Setup
@@ -139,4 +139,51 @@ The parameter is `null` if no `ProblemContext` is assigned, which happens only i
 (`problem4j.webmvc.problem-context-filter.enabled=false` or `problem4j.webflux.problem-context-filter.enabled=false`).
 With the filter enabled (default), a non-nullable `ProblemContext` parameter is safe in Kotlin, also in `suspend`
 functions.
+
+## Observation Errors
+
+Spring records exceptions in the HTTP server observation (used for `http.server.requests` metrics and server spans) only
+if they're not handled by the web framework. As Problem4J handles exceptions in controller advices, without anything
+else such requests would report `exception=none`, even with `5xx` responses.
+
+To fix that, Problem4J records handled exceptions as errors of the current server observation, by setting them on its
+`ServerRequestObservationContext` (as recommended by Spring for handled exceptions). The `exception` key of
+`http.server.requests` metrics and server spans then contains the simple name of the exception class. Which exceptions
+are recorded is decided by
+[`problem4j.observation-errors`](./01-setting-up-and-configuration.md#problem4jobservation-errors) property.
+
+- `server` (default) - exceptions resulting in a `5xx` response.
+- `all` - all handled exceptions, regardless of the response status.
+- `none` - no exceptions, as in versions prior to `3.1.0`.
+
+```properties
+problem4j.observation-errors=all
+```
+
+For example, `GET /orders` failing with an unexpected `IllegalStateException` produces a `500 Internal Server Error`
+response, and `http.server.requests` metric with `exception=IllegalStateException` instead of `exception=none`.
+
+Notes:
+
+- An error already recorded in the observation context (e.g. by your own code) is never replaced.
+- Error is set only on the observation context, so it shows up in key values (metric tags and span attributes), but
+  observation handlers aren't notified with `onError`. With Micrometer Tracing, the span gets `exception` attribute, but
+  its status isn't changed.
+- Nothing happens if there is no server observation, e.g. without `ObservationRegistry` bean.
+
+`ObservationErrorWebMvcInspector` and `ObservationErrorWebFluxInspector` are the actual implementations, registered as
+`AdviceWebMvcInspector` / `AdviceWebFluxInspector` beans (see [Logging](./03-logging.md)). **Note** that these can be
+replaced, as all `@Bean`-s provided by this library are marked with `@ConditionalOnMissingBean`, e.g. to record errors
+based on a custom status predicate.
+
+```java
+@Bean
+ObservationErrorWebMvcInspector observationErrorWebMvcInspector() {
+  return new ObservationErrorWebMvcInspector(status -> status.isError() && status.value() != 404);
+}
+```
+
+Available configuration properties:
+
+- [`problem4j.observation-errors`](./01-setting-up-and-configuration.md#problem4jobservation-errors)
 

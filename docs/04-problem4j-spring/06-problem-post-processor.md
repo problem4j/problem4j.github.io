@@ -123,3 +123,67 @@ For a `Problem` with `"status": 404` and `context.traceId=WQ1tbs12rtSD`, the res
   "app.version": "1.0"
 }
 ```
+
+### Tracing Identifiers in Responses
+
+The most common use case is returning the trace identifier as a separate field, so a client can report it, and it can
+be found in application logs. With [`micrometer` tracing source](./07-additional-features.md#tracing), the span
+identifier is available as `{context.spanId}` too. As each extension is overridden independently, `spanId` is skipped
+whenever no span is available, while `traceId` is still added.
+
+```properties
+problem4j.extension-overrides.traceId={context.traceId}
+problem4j.extension-overrides.spanId={context.spanId}
+```
+
+```json
+{
+  "status": 500,
+  "title": "Internal Server Error",
+  "traceId": "4bf92f3577b34da6a3ce929b0e0e4736",
+  "spanId": "a3ce929b0e0e4736"
+}
+```
+
+### YAML Configuration
+
+In YAML, templates starting with `{` must be quoted, as an unquoted `{...}` is parsed as an inline map. Names with dots
+or other special characters must use quoted bracket notation.
+
+```yaml
+problem4j:
+  extension-overrides:
+    traceId: "{context.traceId}"
+    code: "{problem.status}"
+    summary: "{problem.status} {problem.title}"
+    "[app.version]": "1.0"
+```
+
+### Environment Variables
+
+When set with environment variables, extension names are **lowercased** and underscores become dots, following Spring
+Boot's relaxed binding rules. For example, `PROBLEM4J_EXTENSIONOVERRIDES_TRACEID={context.traceId}` adds a `traceid`
+extension (not `traceId`), and `PROBLEM4J_EXTENSIONOVERRIDES_APP_VERSION=1.0` adds `app.version`. To keep the case of
+extension names, set them in `SPRING_APPLICATION_JSON`, or in a configuration file.
+
+```shell
+SPRING_APPLICATION_JSON='{"problem4j":{"extension-overrides":{"traceId":"{context.traceId}"}}}'
+```
+
+### Custom Settings
+
+`DefaultProblemPostProcessor` reads templates from `PostProcessorSettings`, implemented by `ProblemProperties`. All its
+methods have default implementations returning no override, so a custom implementation only needs the ones it uses,
+e.g. to compute extension overrides in code instead of configuration.
+
+```java
+@Bean
+ProblemPostProcessor problemPostProcessor(BuildProperties build) {
+  return new DefaultProblemPostProcessor(new PostProcessorSettings() {
+    @Override
+    public Map<String, String> getExtensionOverrides() {
+      return Map.of("traceId", "{context.traceId}", "version", build.getVersion());
+    }
+  });
+}
+```
