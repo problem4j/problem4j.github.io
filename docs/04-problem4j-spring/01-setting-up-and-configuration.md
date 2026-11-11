@@ -104,6 +104,15 @@ such as request trace identifiers or constructing predictable instance URIs. Def
 
 See [Problem Post-Processor](./06-problem-post-processor.md) chapter for more info.
 
+### `problem4j.extension-overrides.<name>`
+
+Defines templates for overriding extension members of `Problem` responses, keyed by extension name. Useful for adding
+runtime context, such as request trace identifiers, as separate fields of every response. An override replaces an
+extension with the same name set by an exception or resolver. Names containing dots or other special characters must use
+bracket notation (`problem4j.extension-overrides[app.version]=1.0`). Defaults to empty (disabled).
+
+See [Problem Post-Processor](./06-problem-post-processor.md#extension-overrides) chapter for more info.
+
 ### `problem4j.duplicate-resolver-policy`
 
 Decides what happens when several `ProblemResolver` beans handle the same exception class with equal precedence

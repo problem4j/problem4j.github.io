@@ -17,6 +17,7 @@ Currently, the following fields can be overridden:
 - `type` - the logical category of the problem
 - `title` - a short, human-readable summary of the problem
 - `instance` - an identifier of a specific occurrence, often a URI or trace reference
+- extensions - additional members of the problem (see [Extension Overrides](#extension-overrides))
 
 These overrides are applied by a **global post-processor** using templates defined in configuration properties.
 Templates for overriding problem fields may include placeholders that are dynamically replaced at runtime.
@@ -58,6 +59,7 @@ Available configuration properties:
 - [`problem4j.type-override`](./01-setting-up-and-configuration.md#problem4jtype-override)
 - [`problem4j.title-override`](./01-setting-up-and-configuration.md#problem4jtitle-override)
 - [`problem4j.instance-override`](./01-setting-up-and-configuration.md#problem4jinstance-override)
+- [`problem4j.extension-overrides.<name>`](./01-setting-up-and-configuration.md#problem4jextension-overridesname)
 
 **Example:**
 
@@ -77,3 +79,47 @@ the resulting response will contain:
 - `"instance": "/errors/WQ1tbs12rtSD"`
 
 This allows uniform and resolvable links for problem reports across environments.
+
+## Extension Overrides
+
+Extension members can be set with `problem4j.extension-overrides.<name>` properties, where `<name>` is the name of the
+extension. Templates may use the following placeholders:
+
+- `{problem.type}`, `{problem.title}`, `{problem.status}`, `{problem.detail}`, `{problem.instance}` - the corresponding
+  field of the problem, after `type`, `title` and `instance` overrides are applied
+- `{context.<key>}` - any value from the current request context (e.g. `{context.traceId}`)
+
+Existing extensions of the problem cannot be referenced in templates.
+
+Extension overrides follow the same rules as field overrides, with a few additions:
+
+- Each extension is overridden independently. If any placeholder in its template cannot be resolved, only that
+  extension is skipped, and an existing extension with the same name stays unchanged.
+- An override **replaces an existing extension** with the same name, for example one set by an exception or a
+  `ProblemResolver`.
+- A template made of **exactly one placeholder** keeps the type of the resolved value, so `{problem.status}` produces a
+  number. Any other template produces a string.
+- Standard field names (`type`, `title`, `status`, `detail`, `instance`) cannot be used as extension names and are
+  ignored.
+
+**Example:**
+
+```properties
+problem4j.extension-overrides.traceId={context.traceId}
+problem4j.extension-overrides.code={problem.status}
+problem4j.extension-overrides.summary={problem.status} {problem.title}
+problem4j.extension-overrides[app.version]=1.0
+```
+
+For a `Problem` with `"status": 404` and `context.traceId=WQ1tbs12rtSD`, the response will contain:
+
+```json
+{
+  "status": 404,
+  "title": "Not Found",
+  "traceId": "WQ1tbs12rtSD",
+  "code": 404,
+  "summary": "404 Not Found",
+  "app.version": "1.0"
+}
+```
