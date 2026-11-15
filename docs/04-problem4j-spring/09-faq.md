@@ -44,8 +44,9 @@ handled by Spring Boot again, with its own `detail` and `instance` values.
 
 Two or more `ProblemResolver` beans handle the same exception class with equal precedence. Either mark the preferred
 resolver with `@Order` (lower value wins), or set
-[`problem4j.duplicate-resolver-policy=first`](./01-setting-up-and-configuration.md#problem4jduplicate-resolver-policy)
-to use the first one registered.
+[`problem4j.duplicate-resolver-policy`](./01-setting-up-and-configuration.md#problem4jduplicate-resolver-policy) to
+`first` or `last` to use the first or the last one registered. `last` keeps built-in resolvers winning over your own
+ones, as in versions prior to `3.1.0`.
 
 See [Implementing `ProblemResolver`](./02-exception-handling.md#implementing-problemresolver) chapter for more info.
 
@@ -109,17 +110,62 @@ See [Unknown Exceptions](../07-appendix/01-exception-resolution-reference.md#unk
 
 ### How do I include `traceId` in responses?
 
-Problem4J assigns a `traceId` to every request (generated, or taken from the header set in
-[`problem4j.tracing-header-name`](./01-setting-up-and-configuration.md#problem4jtracing-header-name)), but doesn't add
-it to the response by itself. Reference it with `{context.traceId}` placeholder, e.g. in `instance` override.
+Problem4J assigns a `traceId` to every request (from the current Micrometer Tracing span, from the header set in
+[`problem4j.tracing-header-name`](./01-setting-up-and-configuration.md#problem4jtracing-header-name), or
+generated), but doesn't add it to the response body by itself. Reference it with `{context.traceId}` placeholder, as a
+separate field with an extension override, or as a part of `instance` field with an `instance` override.
 
 ```properties
-problem4j.tracing-header-name=X-Trace-Id
+problem4j.extension-overrides.traceId={context.traceId}
 problem4j.instance-override=https://example.org/traces/{context.traceId}
 ```
 
-See [Simple Tracing](./07-additional-features.md#simple-tracing) and
-[Problem Post-Processor](./06-problem-post-processor.md) chapters for more info.
+Set `problem4j.tracing-header-name=X-Trace-Id` to return it in a response header as well.
+
+See [Tracing](./07-additional-features.md#tracing) and
+[Extension Overrides](./06-problem-post-processor.md#extension-overrides) chapters for more info.
+
+</div>
+
+<div className="faq-card">
+
+### How do I use the OpenTelemetry `traceId` instead of a generated one?
+
+Add Micrometer Tracing to the application, e.g. with `spring-boot-micrometer-tracing-opentelemetry` and
+`micrometer-tracing-bridge-otel`. With
+[`problem4j.tracing-source`](./01-setting-up-and-configuration.md#problem4jtracing-source) left at its default `auto`
+value, Problem4J detects it and takes `traceId` (and `spanId`) of `ProblemContext` from the current span, so
+`{context.traceId}` placeholders resolve to the same `traceId` that appears in logs. An incoming W3C `traceparent`
+header continues the trace it carries, also if it's not sampled (`-00` flags).
+
+```properties
+problem4j.tracing-source=micrometer
+```
+
+Setting `micrometer` explicitly makes application startup fail if Micrometer Tracing is missing on the classpath,
+instead of silently falling back to `simple` (unless a custom `ProblemContext` filter bean is defined). See
+[Tracing](./07-additional-features.md#tracing) chapter for the order in which trace identifiers are resolved.
+
+**Note** that `problem4j.tracing-header-name=traceparent` is not a way to achieve this. Problem4J would take the
+whole W3C header value (`00-<traceId>-<spanId>-01`) as `traceId`, and echo it back in the response header.
+
+</div>
+
+<div className="faq-card">
+
+### Why does `http.server.requests` metric show `exception=none` for errors?
+
+Spring records exceptions in the server observation only if they're not handled by the web framework, and Problem4J
+handles them in controller advices. Since `3.1.0`, Problem4J records exceptions resulting in `5xx` responses by itself,
+so the `exception` tag contains the exception class name. Set
+[`problem4j.observation-errors`](./01-setting-up-and-configuration.md#problem4jobservation-errors) to `all`
+to record `4xx` ones too, or to `none` to disable it.
+
+```properties
+problem4j.observation-errors=all
+```
+
+See [Observation Errors](./07-additional-features.md#observation-errors) chapter for more info.
 
 </div>
 
@@ -213,6 +259,9 @@ public class ServerErrorLoggingInspector implements AdviceWebMvcInspector {
 ```
 
 See [Logging](./03-logging.md) chapter for more info, including WebFlux counterpart `AdviceWebFluxInspector`.
+
+Since `3.1.0`, `AdviceWebMvcInspector` and `AdviceWebFluxInspector` are deprecated in favor of `ProblemInspector`, with the
+same `inspect` signature.
 
 </div>
 

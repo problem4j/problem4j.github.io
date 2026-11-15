@@ -17,6 +17,7 @@ Currently, the following fields can be overridden:
 - `type` - the logical category of the problem
 - `title` - a short, human-readable summary of the problem
 - `instance` - an identifier of a specific occurrence, often a URI or trace reference
+- extensions - additional members of the problem (see [Extension Overrides](#extension-overrides))
 
 These overrides are applied by a **global post-processor** using templates defined in configuration properties.
 Templates for overriding problem fields may include placeholders that are dynamically replaced at runtime.
@@ -34,7 +35,7 @@ Available placeholders:
     - `{context.<key>}` - any value from the current request context (e.g. `{context.traceId}`)
 
 The `{context.<key>}` placeholder resolves values stored in `ProblemContext` for the current request. The built-in
-[Simple Tracing](./07-additional-features.md#simple-tracing) feature stores the trace identifier under the `traceId`
+[Tracing](./07-additional-features.md#tracing) feature stores the trace identifier under the `traceId`
 key, making it available as `{context.traceId}`. You can also populate the context with custom keys by providing your
 own `ProblemContextFilter`.
 
@@ -58,6 +59,7 @@ Available configuration properties:
 - [`problem4j.type-override`](./01-setting-up-and-configuration.md#problem4jtype-override)
 - [`problem4j.title-override`](./01-setting-up-and-configuration.md#problem4jtitle-override)
 - [`problem4j.instance-override`](./01-setting-up-and-configuration.md#problem4jinstance-override)
+- [`problem4j.extension-overrides.<name>`](./01-setting-up-and-configuration.md#problem4jextension-overridesname)
 
 **Example:**
 
@@ -77,3 +79,111 @@ the resulting response will contain:
 - `"instance": "/errors/WQ1tbs12rtSD"`
 
 This allows uniform and resolvable links for problem reports across environments.
+
+## Extension Overrides
+
+Extension members can be set with `problem4j.extension-overrides.<name>` properties, where `<name>` is the name of the
+extension. Templates may use the following placeholders:
+
+- `{problem.type}`, `{problem.title}`, `{problem.status}`, `{problem.detail}`, `{problem.instance}` - the corresponding
+  field of the problem, after `type`, `title` and `instance` overrides are applied
+- `{context.<key>}` - any value from the current request context (e.g. `{context.traceId}`)
+
+Existing extensions of the problem cannot be referenced in templates.
+
+Extension overrides follow the same rules as field overrides, with a few additions:
+
+- Each extension is overridden independently. If any placeholder in its template cannot be resolved, only that
+  extension is skipped, and an existing extension with the same name stays unchanged.
+- An override **replaces an existing extension** with the same name, for example one set by an exception or a
+  `ProblemResolver`.
+- A template made of **exactly one placeholder** keeps the type of the resolved value, so `{problem.status}` produces a
+  number. Any other template produces a string.
+- Standard field names (`type`, `title`, `status`, `detail`, `instance`) cannot be used as extension names and are
+  ignored.
+
+**Example:**
+
+```properties
+problem4j.extension-overrides.traceId={context.traceId}
+problem4j.extension-overrides.code={problem.status}
+problem4j.extension-overrides.summary={problem.status} {problem.title}
+problem4j.extension-overrides[app.version]=1.0
+```
+
+For a `Problem` with `"status": 404` and `context.traceId=WQ1tbs12rtSD`, the response will contain:
+
+```json
+{
+  "status": 404,
+  "title": "Not Found",
+  "traceId": "WQ1tbs12rtSD",
+  "code": 404,
+  "summary": "404 Not Found",
+  "app.version": "1.0"
+}
+```
+
+### Tracing Identifiers in Responses
+
+The most common use case is returning the trace identifier as a separate field, so a client can report it, and it can
+be found in application logs. With [`micrometer` tracing source](./07-additional-features.md#tracing), the span
+identifier is available as `{context.spanId}` too. As each extension is overridden independently, `spanId` is skipped
+whenever no span is available, while `traceId` is still added.
+
+```properties
+problem4j.extension-overrides.traceId={context.traceId}
+problem4j.extension-overrides.spanId={context.spanId}
+```
+
+```json
+{
+  "status": 500,
+  "title": "Internal Server Error",
+  "traceId": "4bf92f3577b34da6a3ce929b0e0e4736",
+  "spanId": "a3ce929b0e0e4736"
+}
+```
+
+### YAML Configuration
+
+In YAML, templates starting with `{` must be quoted, as an unquoted `{...}` is parsed as an inline map. Names with dots
+or other special characters must use quoted bracket notation.
+
+```yaml
+problem4j:
+  extension-overrides:
+    traceId: "{context.traceId}"
+    code: "{problem.status}"
+    summary: "{problem.status} {problem.title}"
+    "[app.version]": "1.0"
+```
+
+### Environment Variables
+
+When set with environment variables, extension names are **lowercased** and underscores become dots, following Spring
+Boot's relaxed binding rules. For example, `PROBLEM4J_EXTENSIONOVERRIDES_TRACEID={context.traceId}` adds a `traceid`
+extension (not `traceId`), and `PROBLEM4J_EXTENSIONOVERRIDES_APP_VERSION=1.0` adds `app.version`. To keep the case of
+extension names, set them in `SPRING_APPLICATION_JSON`, or in a configuration file.
+
+```shell
+SPRING_APPLICATION_JSON='{"problem4j":{"extension-overrides":{"traceId":"{context.traceId}"}}}'
+```
+
+### Custom Settings
+
+`DefaultProblemPostProcessor` reads templates from `PostProcessorSettings`, implemented by `ProblemProperties`. All its
+methods have default implementations returning no override, so a custom implementation only needs the ones it uses,
+e.g. to compute extension overrides in code instead of configuration.
+
+```java
+@Bean
+ProblemPostProcessor problemPostProcessor(BuildProperties build) {
+  return new DefaultProblemPostProcessor(new PostProcessorSettings() {
+    @Override
+    public Map<String, String> getExtensionOverrides() {
+      return Map.of("traceId", "{context.traceId}", "version", build.getVersion());
+    }
+  });
+}
+```

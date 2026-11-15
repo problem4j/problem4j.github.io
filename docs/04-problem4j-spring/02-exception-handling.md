@@ -42,7 +42,7 @@ public class ExampleExceptionResolver implements ProblemResolver {
         .title("Invalid Request")
         .status(400)
         .detail("bad input for user " + e.getUserId())
-        .instance("https://example.org/instances/" + context.getTraceId())
+        .instance("https://example.org/instances/" + context.get("traceId"))
         .extension("userId", e.getUserId())
         .extension("fieldName", e.getFieldName())
         .build();
@@ -82,8 +82,45 @@ public class ExampleExceptionResolver implements ProblemResolver {
 
 Candidates with equal precedence are a configuration error - startup fails with an `IllegalStateException` naming the
 conflicting beans. Set
-[`problem4j.duplicate-resolver-policy=first`](./01-setting-up-and-configuration.md#problem4jduplicate-resolver-policy)
-to pick the first one registered instead.
+[`problem4j.duplicate-resolver-policy`](./01-setting-up-and-configuration.md#problem4jduplicate-resolver-policy) to
+`first` or `last` to pick the first or the last one registered instead.
+
+### Resolver Collaborators
+
+`AbstractProblemResolver` and its subclasses (including the built-in resolvers) use collaborators such as
+`ProblemFormat` or `TypeNameMapper`. In `3.0.0`, these were passed through constructors, e.g.
+`super(ExampleException.class, problemFormat)`.
+
+:::info
+
+Since `3.1.0`, constructors taking collaborators are deprecated. `ProblemBeanPostProcessor` assigns the beans of the
+application context to every `ProblemResolver` declared as a bean, after it is constructed, so a subclass needs only the
+no-arg constructor (`AbstractProblemResolver(Class)`). Collaborators passed explicitly to a deprecated constructor are
+kept and never replaced, so existing code keeps working.
+
+:::
+
+```java
+@Component
+public class ExampleExceptionResolver extends AbstractProblemResolver {
+
+  public ExampleExceptionResolver() {
+    super(ExampleException.class); // ProblemFormat is assigned by ProblemBeanPostProcessor
+  }
+
+  @Override
+  public Problem resolve(
+      ProblemContext context, Exception ex, HttpHeaders headers, HttpStatusCode status) {
+    // ...
+  }
+}
+```
+
+Any bean (not only resolvers) can receive a collaborator by implementing the matching `*Aware` interface -
+`ProblemFormatAware`, `TypeNameMapperAware`, `BindingResultSupportAware`, `MethodValidationResultSupportAware` or
+`MethodParameterSupportAware` - which are called by `ProblemBeanPostProcessor` after construction.
+
+### Resolver Lambdas in Kotlin
 
 Since `3.1.0`, Kotlin projects can also declare a resolver from a lambda with `problemResolver<E> { }`, without
 implementing the interface. The exception is passed already cast to `E`, optionally preceded by `ProblemContext`.
@@ -99,7 +136,7 @@ class ProblemConfiguration {
         title("Invalid Request")
         status(400)
         detail("bad input for user ${ex.userId}")
-        instance("https://example.org/instances/${context.traceId}")
+        instance("https://example.org/instances/${context["traceId"]}")
         extension("userId", ex.userId)
         extension("fieldName", ex.fieldName)
       }
@@ -116,9 +153,8 @@ fields to a `Problem`, without writing a resolver.
 To extract values from target exception, it's possible to use placeholders for interpolation.
 
 - `{message}` - the exact `getMessage()` result from your exception,
-- `{context.traceId}` - the `context.getTraceId()` result for tracking error response with the actual request. The
-- `context` is something that is build in `@RestControllerAdvice`s and it contains processing metadata. Currently only
-- `traceId` is supported,
+- `{context.<key>}` - any value of the request's `ProblemContext`, e.g. `{context.traceId}` for tracking error response
+  with the actual request,
 - `{fieldName}` - any field name declared in exceptions and its superclasses (scanned from current class to its most
   outer one).
 
@@ -236,7 +272,7 @@ public class ExampleExceptionAdvice {
             .title("Invalid Request")
             .status(400)
             .detail(ex.getMessage())
-            .instance("https://example.org/instances/" + context.getTraceId())
+            .instance("https://example.org/instances/" + context.get("traceId"))
             .extension("userId", e.getUserId())
             .extension("fieldName", e.getFieldName())
             .build();
