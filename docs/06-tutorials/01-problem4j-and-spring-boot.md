@@ -40,7 +40,8 @@ public class HelloController {
 
     @GetMapping("/hello")
     public String hello() {
-        throw new ProblemException(Problem.of("Hello Error", 400, "something went wrong with /hello endpoint"));
+        throw new ProblemException(
+            Problem.of("Hello Error", 400, "something went wrong with /hello endpoint"));
     }
 }
 ```

@@ -22,6 +22,8 @@
   --p4j-card-border: #d5ebe2;
   --p4j-card-shadow: rgba(14, 47, 54, 0.12);
   --p4j-faq-question-bg: #e8f5ef;
+
+  --doc-sidebar-width: 360px;
 }
 
 [data-theme='dark'] {

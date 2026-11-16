@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 4
 sidebar_custom_props:
   icon: ⚡
 ---
@@ -8,9 +8,9 @@ sidebar_custom_props:
 
 The example integration of Problem4J with Javalin.
 
-Even though Problem4J is primarily focused on Spring Boot, it can be easily integrated with any Java application, as
-long as you can catch exceptions and convert them to `Problem` instances. This page demonstrates how to do this with
-[Javalin][javalin], a lightweight web framework for Java and Kotlin.
+Even though Problem4J is primarily focused on Spring Boot, it can be easily integrated with any Java or Kotlin application,
+as long as you can catch exceptions and convert them to `Problem` instances. This page demonstrates how to do this with
+[Javalin][javalin], a lightweight web framework using Kotlin.
 
 ## Getting Started
 
@@ -39,36 +39,36 @@ dependencies {
 Note that this example also assumes, for JSON serialization, that you use Jackson (`JsonMapper`) in either v2 or v3 and
 the compatible [Problem4J Jackson](../03-problem4j-jackson/01-jackson.md) module.
 
-```java
-JsonMapper jsonMapper = JsonMapper.builder().findAndAddModules().build();
-ProblemMapper problemMapper = new DefaultProblemMapper();
+```kotlin
+val jsonMapper = JsonMapper.builder().findAndAddModules().build()
+val problemMapper = DefaultProblemMapper()
 
-Javalin app = Javalin.create();
+val app = Javalin.create()
 
-app.get("/hello", ctx -> {
-    throw new ProblemException(
-        Problem.of("Hello Error", 400, "something went wrong with /hello endpoint"));
-});
+app.get("/hello") {
+    throw ProblemException(
+        Problem.of("Hello Error", 400, "something went wrong with /hello endpoint"))
+}
 
-app.exception(ProblemException.class, (ex, ctx) -> {
-    Problem problem = ex.getProblem();
+app.exception(ProblemException::class.java) { ex, ctx ->
+    val problem = ex.problem
 
-    String json = jsonMapper.writeValueAsString(problem);
-    ctx.status(problem.getStatus()).result(json).contentType(Problem.CONTENT_TYPE);
-});
+    val json = jsonMapper.writeValueAsString(problem)
+    ctx.status(problem.status).result(json).contentType(Problem.CONTENT_TYPE)
+}
 
-app.exception(Exception.class, (ex, ctx) -> {
-    Problem problem = Problem.of(500);
+app.exception(Exception::class.java) { ex, ctx ->
+    var problem = Problem.of(500)
 
     if (problemMapper.isMappingCandidate(ex)) {
-        problem = problemMapper.toProblemBuilder(ex).build();
+        problem = problemMapper.toProblemBuilder(ex).build()
     }
 
-    String json = jsonMapper.writeValueAsString(problem);
-    ctx.status(problem.getStatus()).result(json).contentType(Problem.CONTENT_TYPE);
-});
+    val json = jsonMapper.writeValueAsString(problem)
+    ctx.status(problem.status).result(json).contentType(Problem.CONTENT_TYPE)
+}
 
-app.start(7676);
+app.start(7676)
 ```
 
 The above example demonstrates support for both throwing `ProblemException` instances and `@ProblemMapping`-annotated
